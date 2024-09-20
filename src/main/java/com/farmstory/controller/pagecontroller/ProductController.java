@@ -69,8 +69,8 @@ public class ProductController {
     }
 
 
-    @GetMapping("/product/{productIdx}")
-    public ModelAndView getProduct(@PathVariable int productIdx) {
+    @GetMapping("/product")
+    public ModelAndView getProduct(@RequestParam int productIdx) {
         ModelAndView mav = new ModelAndView();
         mav.addObject("productIdx", productIdx);
         mav.addObject("section", "product");
