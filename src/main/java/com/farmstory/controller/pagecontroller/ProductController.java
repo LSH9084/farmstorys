@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -68,8 +69,8 @@ public class ProductController {
     }
 
 
-    @GetMapping("/product")
-    public ModelAndView getProduct(@RequestParam int productIdx) {
+    @GetMapping("/product/{productIdx}")
+    public ModelAndView getProduct(@PathVariable int productIdx) {
         ModelAndView mav = new ModelAndView();
         mav.addObject("productIdx", productIdx);
         mav.addObject("section", "product");
