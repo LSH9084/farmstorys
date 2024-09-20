@@ -1,0 +1,297 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="script">
+    <script src="/js/axios.min.js"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/admin_user_list.css}">
+    <title>회원목록(관리자)</title>
+</head>
+<body>
+<div class="container">
+    <header th:replace="layout/ad_header.html"></header>
+    <main>
+        <aside th:replace="layout/ad_sidebar.html"></aside>
+        <div class="main-container">
+            <div id="section2_main">
+                <div id="section2_title">회원목록</div>
+                <div id="article_wrapper">
+                    <div id="article1">
+                        <table id="member_table">
+                            <tr>
+                                <th><input type="checkbox" id="allCheck"></th>
+                                <th>아이디</th>
+                                <th>이름</th>
+                                <th>별명</th>
+                                <th>이메일</th>
+                                <th>휴대폰</th>
+                                <th>등급</th>
+                                <th>가입일</th>
+                                <th>확인</th>
+                            </tr>
+
+                            <tr th:each="user : ${users}">
+                                <td><input type="checkbox" id="selectedCheck" name="user" th:value="${user.userIdx}"></td>
+                                <td th:text="${user.userId}"></td>
+                                <td th:text="${user.userName}"></td>
+                                <td th:text="${user.userNick}"></td>
+                                <td th:text="${user.userEmail}"></td>
+                                <td th:text="${user.userHp}"></td>
+                                <td>
+                                    <select th:id="${user.userIdx}" onclick="selectUserIdx(event)" class="selectedRole" name="role">
+                                        <option th:each="role : ${roles}"
+                                                th:value="${role}"
+                                                th:text="${role}"
+                                                th:selected="${role == user.userRole}"
+                                                name="role">
+                                        </option>
+                                    </select>
+                                </td>
+                                <td th:text="${user.userCreateAt}"></td>
+                                <td><a class="user-idx" th:id="${user.userIdx}" href="#" onclick="getUser(event)" >[상세확인]</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="prod_heading">
+                        <div onclick="deleteUser()" >선택삭제</div>
+                        <div onclick="putUser()">권한설정</div>
+                    </div>
+                    <div class="list_num">
+                        <a th:href="@{/admin/users(page=0)}" ><<</a>
+                        <a th:href="@{/admin/users(page=${currentPage - 2})}" th:if="${currentPage>=2}" th:text="${currentPage}-1"></a>
+                        <a th:href="@{/admin/users(page=${currentPage - 1})}" th:if="${currentPage>=1}" th:text="${currentPage}"></a>
+                        <a th:text="${currentPage}+1"></a>
+                        <a th:href="@{/admin/users(page=${currentPage + 1})}" th:if="${(totalPage - currentPage)>=2}" th:text="${currentPage}+2"></a>
+                        <a th:href="@{/admin/users(page=${currentPage + 2})}" th:if="${(totalPage - currentPage)>=3}" th:text="${currentPage}+3"></a>
+                        <a th:href="@{/admin/users(page=${totalPage.intValue()-1})}" >>></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup">
+        </div>
+        <div class="popup-bg"></div>
+    </main>
+    <footer th:replace="layout/ad_footer.html"></footer>
+</div>
+<script>
+    const allCheck = document.getElementById('allCheck')
+    const selectedCheck = document.querySelectorAll('#selectedCheck')
+    let cnt = 0;
+    allCheck.addEventListener('change',(e)=>{
+        selectedCheck.forEach(v => {
+            v.checked = e.target.checked;
+            cnt = selectedCheck.length;
+            console.log(cnt)
+        })
+    })
+
+    selectedCheck.forEach(v=>{
+        v.addEventListener('change',(e)=>{
+            if(e.target.checked){
+                cnt++;
+                console.log(cnt)
+            } else {
+                cnt--;
+                console.log(cnt)
+            }
+            if(cnt===selectedCheck.length){
+                allCheck.checked = true;
+            } else if(cnt<selectedCheck.length) {
+                allCheck.checked = false;
+            }
+        })
+    })
+</script>
+<script>
+    const userIdx = document.querySelectorAll('#selectedCheck');
+
+    const submitData = [];
+
+    userIdx.forEach((v)=>{
+        v.addEventListener('change',(e)=>{
+            if(e.target.checked){
+                submitData.push(e.target.value);
+            } else {
+                // 체크 해제 시 배열에서 제거
+                const index = submitData.indexOf(e.target.value);
+                if (index > -1) {
+                    submitData.splice(index, 1);
+                }
+            }
+        })
+    })
+
+
+    let putData = {};
+    function selectUserIdx(event){
+        console.log("eeee")
+        console.log(event.target.id)
+        const selectedElement = document.getElementById(event.target.id);
+        // const userIdx = e.target.id;  // id 값을 가져옴
+        putData.userIdx = event.target.id;
+
+        selectedElement.addEventListener('change',(e)=>{
+            putData.userRole = e.target.value;
+            console.log(putData)
+        })
+
+
+    }
+
+
+
+    async function deleteUser(){
+        try {
+            const resp = await axios.delete('/api/admin/user',{
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                data : {
+                    "userIdx" : submitData
+                }
+            })
+            if(resp.status===200){
+                window.location.href = resp.data;
+            } else {
+                alert('삭제 실패하였습니다.')
+            }
+
+        } catch (e) {
+
+        }
+    }
+
+    async function putUser(){
+
+        try {
+            const resp = await axios.put("/api/admin/user",putData,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            if(resp.status===200){
+                alert("수정 성공")
+            } else {
+                alert("수정 실패")
+            }
+        } catch (e) {
+
+        }
+    }
+    async function getUser(event){
+        event.preventDefault();
+        console.log(event.target.id)
+        openPopup()
+        const selectedElement = document.querySelector('.user-idx');
+        const userIdx = selectedElement.id;
+
+        try {
+            const resp = await axios.get("/api/admin/user", {
+                params: {
+                    "userIdx": event.target.id
+                },
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            console.log(resp.data.user)
+            const user = resp.data.user;
+            document.querySelector('.popup').innerHTML = `
+                <h1 class="h1">유저정보</h1>
+                <table class="detail-table">
+                    <tr class="userIdx-tr">
+                        <th>회원번호</th>
+                        <td>${user.userIdx}</td>
+                    </tr>
+                    <tr class="userName-tr">
+                        <th>이름</th>
+                        <td>${user.userName}</td>
+                    </tr>
+                    <tr class="userId-tr">
+                        <th>아이디</th>
+                        <td>${user.userId}</td>
+                    </tr>
+                    <tr class="userNick-tr">
+                        <th>닉네임</th>
+                        <td>${user.userNick}</td>
+                    </tr>
+                    <tr class="userEmail-tr">
+                        <th>이메일</th>
+                        <td>${user.userEmail}</td>
+                    </tr>
+                    <tr class="userHp-tr">
+                        <th>전화번호</th>
+                        <td>${user.userHp}</td>
+                    </tr>
+                    <tr class="userCreateAt-tr">
+                        <th>가입일자</th>
+                        <td>${user.userCreateAt}</td>
+                    </tr>
+                    <tr class="userRole-tr">
+                        <th>유저권한</th>
+                        <td>${user.userRole}</td>
+                    </tr>
+                    <tr class="userAddr-tr">
+                        <th>주소</th>
+                        <td>${user.addr} ${user.addrDetail}</td>
+                    </tr>
+                    <tr class="userPoint-tr">
+                        <th>포인트</th>
+                        <td>${user.userPoint}</td>
+                    </tr>
+                    <button onclick="closePopup()" class="popup-delete">닫기</button>
+                </table>
+            `
+
+        //         < th > 유저번호 < /th>
+        //     <th>이름</th>
+        //     <th>아이디</th>
+        //     <th>닉네임</th>
+        //     <th>이메일</th>
+        //     <th>전화번호</th>
+        //     <th>가입일자</th>
+        //     <th>유저권한</th>
+        //     <th>주소</th>
+        //     <th>우편번호</th>
+        //     <th>상세주소</th>
+        //     <th>포인트</th>
+        // </tr>
+        //     <tr>
+        //         <td>${user.userIdx}</td>
+        //         <td>${user.userName}</td>
+        //         <td>${user.userId}</td>
+        //         <td>${user.userNick}</td>
+        //         <td>${user.userEmail}</td>
+        //         <td>${user.userHp}</td>
+        //         <td>${user.userCreateAt}</td>
+        //         <td>${user.userRole}</td>
+        //         <td>${user.addr}</td>
+        //         <td>${user.addrZone}</td>
+        //         <td>${user.addrDetail}</td>
+        //         <td>${user.userPoint}</td>
+        //     </tr>
+
+        } catch (e) {
+
+        }
+    }
+</script>
+<script>
+    function openPopup() {
+        document.querySelector('.popup').style.display = 'block';
+        document.querySelector('.popup-bg').style.display = 'block';
+    }
+
+    function closePopup() {
+        document.querySelector('.popup').style.display = 'none';
+        document.querySelector('.popup-bg').style.display = 'none';
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="AdminSidebarFragment">
+<th:block th:fragment="script">
+    <script src="/js/axios.min.js"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/ad_sidebar.css}">
+    <script th:inline="javascript">
+        var section = /*[[${section}]]*/ '';
+    </script>
+</head>
+<body>
+<div id="section1">
+    <div id="section1_head">
+        <a>주요기능</a>
+    </div>
+    <div id="section1_menu">
+        <ul id="prod_manage">
+            상품관리
+            <div>
+                <li id="prod_list">L
+                <a th:classappend="${section == 'product'}? 'active' : ''"
+                   href="/admin/products">상품목록</a>
+                </li>
+                <li id="prod_register">L
+                <a th:classappend="${section == 'postproduct'}? 'active' : ''"
+                   href="/admin/view/product">상품등록</a>
+                </li>
+            </div>
+        </ul>
+        <ul id="order_manage">
+            주문관리
+            <li id="order_list">L
+            <a th:classappend="${section == 'order'}? 'active' : ''"
+               href="/admin/orders">주문목록</a>
+            </li>
+        </ul>
+        <ul id="user_manage">
+            회원관리
+            <li id="user_list">L
+            <a th:classappend="${section == 'user'}? 'active' : ''"
+               href="/admin/users">회원목록</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

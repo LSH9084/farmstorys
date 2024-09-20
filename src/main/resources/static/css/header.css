@@ -1,0 +1,163 @@
+* {
+    margin: 0;
+    padding: 0;
+    font: normal 12px '돋움';
+}
+ul, ol {list-style: none;}
+a {text-decoration: none; color: #111;}
+
+.container {
+    width: 980px;
+    height: auto;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    width: 100%;
+}
+
+
+
+header {
+    position: relative;
+    width: 100%;
+    background-image: url('/images/head_top_line.png');
+    background-repeat: no-repeat;
+}
+
+header > .logo {
+    position: absolute;
+    left: 50%;
+    top: 20px;
+    margin-left: -95px;
+}
+header > p {
+    float: right;
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+header > img {
+    clear: both;
+    margin-top: 26px;
+    width: 300px;
+}
+
+header > .gnb {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    margin-top: 50px;
+}
+header > .gnb > li {
+    float: left;
+    width: 20%;
+    height: 100%;
+    background-image: url('/images/head_menu_line.png');
+    background-repeat: no-repeat;
+    background-position: 0 -6px;
+}
+
+header > .gnb > li > a {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 0;
+    background-position: 0 6px;
+    background-repeat: no-repeat;
+}
+
+header > .gnb > li > a > img {
+    position: absolute;
+    left: 50%;
+    top: -16px;
+}
+
+header > .gnb > li:nth-child(1) > a {background-image: url('/images/head_menu1.png');}
+header > .gnb > li:nth-child(2) > a {background-image: url('/images/head_menu2.png');}
+header > .gnb > li:nth-child(3) > a {background-image: url('/images/head_menu3.png');}
+header > .gnb > li:nth-child(4) > a {background-image: url('/images/head_menu4.png');}
+header > .gnb > li:nth-child(5) > a {background-image: url('/images/head_menu5.png');}
+
+header > .gnb > li:nth-child(1) > a:hover {background-image: url('/images/head_menu1_ov.png');}
+header > .gnb > li:nth-child(2) > a:hover {background-image: url('/images/head_menu2_ov.png');}
+header > .gnb > li:nth-child(3) > a:hover {background-image: url('/images/head_menu3_ov.png');}
+header > .gnb > li:nth-child(4) > a:hover {background-image: url('/images/head_menu4_ov.png');}
+header > .gnb > li:nth-child(5) > a:hover {background-image: url('/images/head_menu5_ov.png');}
+
+header > .gnb > li:nth-child(1) > a.active { background-image: url('/images/head_menu1_ov.png'); }
+header > .gnb > li:nth-child(2) > a.active { background-image: url('/images/head_menu2_ov.png'); }
+header > .gnb > li:nth-child(3) > a.active { background-image: url('/images/head_menu3_ov.png'); }
+header > .gnb > li:nth-child(4) > a.active { background-image: url('/images/head_menu4_ov.png'); }
+header > .gnb > li:nth-child(5) > a.active { background-image: url('/images/head_menu5_ov.png'); }
+
+
+header > .gnb > li > .intro {background-image: url('/images/head_menu1_ov.png');}
+header > .gnb > li > .product {background-image: url('/images/head_menu1_ov.png');}
+header > .gnb > li > .croptalk {background-image: url('/images/head_menu1_ov.png');}
+header > .gnb > li > .event {background-image: url('/images/head_menu1_ov.png');}
+header > .gnb > li > .community {background-image: url('/images/head_menu1_ov.png');}
+
+.bg-intro {
+    display: flex;
+    align-items: end;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    background-image: url('/images/bg-intro.png');
+    width: 100%;
+    height: 178px;
+}
+
+.bg-market {
+    display: flex;
+    align-items: end;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    background-image: url('/images/bg-market.png');
+    width: 100%;
+    height: 178px;
+}
+
+.bg-croptalk {
+    display: flex;
+    align-items: end;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    background-image: url('/images/bg-croptalk.png');
+    width: 100%;
+    height: 178px;
+}
+
+.bg-community {
+    display: flex;
+    align-items: end;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    background-image: url('/images/bg-community.png');
+    width: 100%;
+    height: 178px;
+}
+
+.bg-mypage {
+    display: flex;
+    align-items: end;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    background-image: url('/images/bg-mypage.png');
+    width: 100%;
+    height: 178px;
+}
+.bg-event{
+    display: flex;
+    align-items: end;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    background-image: url('/images/bg-event.png');
+    width: 100%;
+    height: 178px;
+}

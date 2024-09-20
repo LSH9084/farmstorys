@@ -1,0 +1,60 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <title>로그인</title>
+</head>
+<body>
+    <div class="container">
+        <header th:replace="layout/header.html"></header>
+        <div class="box">
+            <main>
+                    <section>
+                        <div class="section-login">
+                            <form th:action="@{/auth/user/login}" method="post" id="input-container">
+                                <div>
+                                    <div class="input-group">
+                                        <img th:src="@{/images/login_ico_id.png}" alt="아이디 아이콘">
+                                        <input name="userName" type="text" placeholder="아이디 입력">
+                                    </div>
+                                    <div class="input-group">
+                                        <img th:src="@{/images/login_ico_pw.png}" alt="비밀번호 아이콘">
+                                        <input name="pwd" type="password" placeholder="비밀번호 입력">
+                                    </div>
+                                    <div class="error-text" th:if="${error=='error'}">
+                                        아이디 또는 비밀번호가 틀렸습니다.
+                                    </div>
+                                </div>
+                                <button type="submit" >로그인</button>
+<!--                                <a href="#">로그인</a>-->
+                            </form>
+                        </div>
+                    </section>
+                    <section>
+                        <div class="selction-info">
+                            <div>
+                                <p>회원 로그인 안내</p>
+                                <p>아직 회원이 아니시면 회원으로 가입하세요.</p>
+                            </div>
+                            <div>
+                                <p class="selction-info__link">
+                                    <a href="/view/find/id">아이디 찾기</a>&nbsp;|&nbsp;
+                                    <a href="/view/find/pwd">비밀번호 찾기</a>&nbsp;|&nbsp;
+                                    <a href="/view/signup">회원가입</a>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+            </main>
+
+        </div>
+        <footer th:replace="layout/footer.html"></footer>
+    </div>
+
+</body>
+</html>

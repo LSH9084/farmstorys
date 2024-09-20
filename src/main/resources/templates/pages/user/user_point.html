@@ -1,0 +1,56 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="script">
+    <script src="/js/axios.min.js"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/user_point.css}">
+    <title>상품 상세보기</title>
+</head>
+<body>
+<div class="container">
+    <header th:replace="layout/header.html"></header>
+    <main>
+        <aside th:replace="layout/sidebar.html"></aside>
+        <div class="main-container">
+            <article class="article">
+                <div class="articleIn cf">
+                    <nav>
+                        <h2><img th:src="@{/images/mypage_nav_tit.png}" alt="장보기"></h2>
+                        <p class="location">
+                            <img th:src="@{/images/sub_page_nav_ico.gif}" alt="메뉴">
+                            <span>HOME </span>
+                            <span>나의정보 </span>
+                            <strong>포인트 사용내역</strong>
+                        </p><!-- .location -->
+                    </nav>
+                    <div><img class="header-gubun" th:src="@{/images/head_menu_line.png}"></div>
+                    <h2 class="h2">사용가능 포인트 : <span th:text="${totalPoint.intValue()}+' p'" class="h2">1000p</span></h2>
+                    <div class="point-div">
+                        <table>
+                            <tr>
+                                <th>내역</th>
+                                <th>적립 포인트</th>
+                                <th>사용 포인트</th>
+                            </tr>
+                            <tr th:each="point : ${points}">
+                                <td th:text="${point.detail}">회원가입 적립</td>
+                                <td th:text="${point.savePoint.intValue() == 0 ? '0' : ('+' + point.savePoint.intValue() + 'p')}">+1000p</td>
+                                <td th:text="${point.usePoint.intValue() == 0 ? '0' : ('-' + point.usePoint.intValue() + 'p')}">0</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <a href="/mypage/point/all?section=mypage&type=point" class="h3">전체 내역 보기</a>
+                </div>
+            </article>
+        </div>
+    </main>
+    <footer th:replace="layout/footer.html"></footer>
+</div>
+</body>
+</html>

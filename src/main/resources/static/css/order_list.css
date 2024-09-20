@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+    font: normal 12px '돋움';
+}
+ul, ol {list-style: none;}
+a {text-decoration: none; color: #111;}
+
+#container {
+    width: 980px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.header-gubun {
+    width: 100%;
+    height: 2px;
+    margin-bottom: 40px;
+    margin-top: 10px;
+}
+
+.list {
+    width: 100%;
+    padding: 20px;
+}
+
+main {
+    display: flex;
+    height: 50%;
+    justify-content: center;
+    background-color: white;
+    width: 100%;
+}
+
+.list nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.list nav em {
+    color: #91BA15;
+    font-weight: 600;
+}
+
+
+h1 {
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.tb1 {width: 762px; height: 50px; border-top: 1px solid #111; box-sizing: border-box; border-collapse: collapse; border-bottom: 1px solid #111;}
+
+/* th 영역 */
+.tb1 th {height: 38px; box-sizing: border-box; background-color: #E5ECEF; line-height: 14.52px; color: #000;}
+
+/* td 영역 */
+.tb1 td {text-align: center; box-sizing: border-box; height: 85px; border-top: 1px solid #f0f0f0; color: #777;}
+
+.tb1 td:nth-of-type(4) {color: #111; font-size: 11.06px; font-weight: 600;}
+.tb1 td:nth-of-type(7) {font-size: 9.75px;}
+.tb1 td:nth-of-type(8) {font-size: 9.75px;}
+.tb1 td:nth-of-type(9) {font-size: 10.13px;}
+
+.tb1 strong {font-weight: bold; color: #000;}
+.tb1 .td_first {height: 38px; color: #888;}
+.tb1 td > img {width: 60px;height: 71%;}
+
+.list_num{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    gap: 10px;
+}

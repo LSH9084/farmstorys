@@ -1,0 +1,294 @@
+* {
+    margin: 0;
+    padding: 0;
+    font: normal 12px '돋움';
+}
+ul, ol {list-style: none;}
+a {text-decoration: none; color: #111;}
+
+#container {
+    width: 980px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.header-gubun {
+    width: 100%;
+    height: 2px;
+    margin-bottom: 40px;
+    margin-top: 10px;
+}
+
+.list {
+    width: 100%;
+    padding: 20px;
+}
+
+main {
+    display: flex;
+    height: 50%;
+    justify-content: center;
+    background-color: white;
+    width: 100%;
+}
+
+.list nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.list nav em {
+    color: #91BA15;
+    font-weight: 600;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.main-contents2 {
+    display: none;
+}
+
+.main-contents3 {
+    display: none;
+}
+
+.main-contents4 {
+    display: none;
+}
+
+.main-header {
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+form {
+    text-align: right;
+
+}
+
+table {
+    /*border: 1px solid black;*/
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+th,
+td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+th {
+    background-color: #d1dee2;
+    text-align: center;
+    width: 150px;
+}
+
+.th2 {
+    width: 45%;
+}
+
+.th4 {
+    width: 18%
+}
+
+td {
+    /* display: block; */
+    text-align: center;
+}
+
+.main-footer{
+    position: relative;
+    margin: 10px;
+}
+
+.button {
+    color: #f2f2f2;
+    text-align: center;
+}
+
+.write {
+    text-align: right;
+
+}
+
+.write-button {
+    padding: 3px;
+    position: absolute;
+    background-color : #4B545E;
+    border : 1px solid #3B3C3F;
+    color : white;
+    bottom : 0;
+    right : 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    width: 800px;
+    margin: auto;
+}
+.header {
+    text-align: right;
+    padding: 10px 0;
+    left: 50px;
+}
+.header .title {
+    float: left;
+    font-size: 18px;
+    font-weight: bold;
+}
+.header a {
+    text-decoration: none;
+    color: black;
+}
+h1 {
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 24px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table tr {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+th {
+    width: 15%;
+    background-color: #f9f9f9;
+}
+.button-group {
+    text-align: right;
+    margin-top: 20px;
+}
+.button-group button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+.button-group button.cancel {
+    background-color: #f5f5f5;
+    color: black;
+}
+.button-group button.submit {
+    background-color: #333;
+    color: white; /* 수정된 부분 */
+}
+
+
+.comment-buttons {
+    margin-top: 20px;
+}
+.comment-buttons button {
+    margin: 0 5px 0 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+}
+.comment-item_no-comments{
+    text-align: center;
+}
+
+.comment-section {
+    margin-top: 20px;
+}
+.comment-section h4 {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dotted #333; /* 실선으로 변경 */
+    font-weight: bold;
+}
+
+.comment-section .comment-list {
+    padding-top: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd; /* 테두리 추가 */
+    padding: 10px; /* 패딩 추가 */
+    background-color: #f4f4f4;
+}
+.comment-section .comment-item {
+    margin-left: 10px;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.comment-section .comment-item:first-child {
+    border-top: none;
+}
+.no-comments {
+    text-align: center; /* 가운데 정렬 */
+    width: 100%; /* 전체 너비 설정 */
+
+}
+.comment-box {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+    left: 10px;
+    background-color: #f4f4f4;
+}
+
+.comment-box2 {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+    left: 10px;
+    background-color: #f4f4f4;
+    display: none;
+}
+
+.comment-box2 h4 {
+    color: red;
+}
+
+.comment-section{
+    display: none;
+}
+
+.file-flex-box{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.file-upload-label {
+    border: none;
+}
+
+#upload-other,#upload-other2 {
+    display: none;
+}
+
+.viewBoardDelete, .viewBoardModify {
+    display: none;
+}
+
+#viewBoardContent {
+    overflow: hidden;  /* 스크롤바 없애기 */
+    height: auto;
+    min-height: 300px;
+    resize: unset;
+}

@@ -1,0 +1,67 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="script">
+    <script src="/js/axios.min.js"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/order_list.css}">
+    <title>상품 상세보기</title>
+</head>
+<body>
+<div class="container">
+    <header th:replace="layout/header.html"></header>
+    <main>
+        <aside th:replace="layout/sidebar.html"></aside>
+        <div class="list">
+            <nav>
+                <img th:src="@{/images/myinfo_nav_it.png}" alt="주문내역" />
+                <p>
+                    HOME >
+                    <span>나의정보</span> >
+                    <em>주문상세정보</em>
+                </p>
+            </nav>
+            <div><img class="header-gubun" th:src="@{/images/head_menu_line.png}"></div>
+            <table class="tb1">
+                <colgroup>
+                    <col style="width: 11%">
+                    <col style="width: 5%">
+                    <col style="width: 10%">
+                    <col style="width: 15%">
+                    <col style="width: 10%">
+                    <col style="width: 10%">
+                    <col style="width: 10%">
+                    <col style="width: 10%">
+                </colgroup>
+                <tr>
+                    <th>주문번호</th>
+                    <th>이미지</th>
+                    <th>상품명</th>
+                    <th>판매가격</th>
+                    <th>수량</th>
+                    <th>합계</th>
+                    <th>주문자</th>
+                    <th>주문일</th>
+                </tr>
+                <tr id="table-setter" th:each="order : ${orders}">
+                    <td th:text="${order.orderIdx}"></td>
+                    <td><img th:src="@{${order.filePath}+ ${order.fileName}}"></td>
+                    <td th:text="${order.prodName}"></td>
+                    <td th:text="${order.prodPrice.intValue()}+원"></td>
+                    <td th:text="${order.itemQuantity}"></td>
+                    <td th:text="${order.totalPrice.intValue()}+원"></td>
+                    <td th:text="${order.userName}"></td>
+                    <td th:text="${order.orderCreateAt}"></td>
+                </tr>
+            </table>
+        </div>
+    </main>
+    <footer th:replace="layout/footer.html"></footer>
+</div>
+</body>
+</html>

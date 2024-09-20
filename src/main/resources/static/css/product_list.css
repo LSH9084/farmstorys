@@ -1,0 +1,98 @@
+main {
+    display: flex;
+    position: relative;
+}
+
+.main-container {
+    width: 100%;
+    padding: 20px;
+    padding-left: 40px;
+}
+
+.header-gubun {
+    width: 100%;
+    height: 2px;
+    margin-bottom: 40px;
+    margin-top: 10px;
+}
+
+.main-container nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-container nav em {
+    color: #91BA15;
+    font-weight: 600;
+}
+
+main .lnb > li:nth-child(1) > a {background-image: url('../images/sub_cate2_lnb1.png');}
+main .lnb > li:nth-child(1) > a:hover {background-image: url('../images/sub_cate2_lnb1_ov.png');}
+main .lnb > li:nth-child(1).on > a {background-image: url('../images/sub_cate2_lnb1_ov.png');}
+
+ main > .main-container > .sort > a {
+    color: #999;
+}
+ main > .main-container > .sort > .on {
+    color:#111;
+}
+ main > .main-container > table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 1px solid #111;
+    border-bottom: 1px solid #111;
+    margin-top: 10px;
+}
+ main > .main-container > table tr {
+    border-bottom: 1px solid #eee;
+     text-align: center;
+}
+
+ main > .main-container > table tr > td {
+    padding: 10px;
+    box-sizing: border-box;
+    color: #777;
+}
+ main > .main-container > table tr > td:nth-child(1) {width: 10%;}
+ main > .main-container > table tr > td:nth-child(2) {width: 10%;}
+ main > .main-container > table tr > td:nth-child(3) {width: 20%;}
+ main > .main-container > table tr > td:nth-child(4) {width: 10%;}
+ main > .main-container > table tr > td:nth-child(5) {width: 10%;}
+
+ main > .main-container > table tr > td > strong {
+    color: #111;
+    font-weight: bold;
+}
+
+ main > .main-container > .paging {
+    margin: 20px 0;
+    text-align: center;
+}
+ main > .main-container > .paging > a {
+    color: #999;
+}
+ main > .main-container > .paging > .on {
+    color: #111;
+    text-decoration: underline;
+}
+
+.prod_img{
+    width: 50px;
+    height: 50px;
+}
+
+.discount-img {
+    position: relative;
+    top: -30px;
+    left: -24px;
+}
+
+.notPrice{
+    text-decoration: line-through;
+    text-decoration-color: red;
+    text-decoration-thickness: 2px;
+}
+
+.realPrice{
+
+}

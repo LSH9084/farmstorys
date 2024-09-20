@@ -1,0 +1,201 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/order_direct.css}">
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <header th:replace="layout/header.html"></header>
+        <main>
+            <aside th:replace="layout/sidebar.html"></aside>
+            <div class="order">
+                <nav>
+                    <img th:src="@{/images/sub_nav_tit_cate2_tit1.png}" alt="장보기"/>
+                    <p>
+                        HOME > 장보기 > <em>바로 주문하기</em>
+                    </p>
+                </nav>
+                <div><img class="header-gubun" th:src="@{/images/head_menu_line.png}"></div>
+                <!-- 내용 시작 -->
+
+                <h3>주문상품 확인</h3>
+                <div class="info">
+                    <img class="list-img" th:src="@{${orderDirect.filePath} + ${orderDirect.fileName}}" alt="딸기 500g">
+
+                    <table border="0">
+                        <tr>
+                            <td>상품명</td>
+                            <td th:text="${orderDirect.prodName}">딸기 500g</td>
+                        </tr>
+                        <tr>
+                            <td>상품코드</td>
+                            <td id="prodIdx" th:text="${orderDirect.prodIdx}">01</td>
+                        </tr>
+                        <tr>
+                            <td>배송비</td>
+                            <td th:text="${orderDirect.prodDelivery.intValue()} +'원'" class="delivery">5,0000원</td>
+                        </tr>
+                        <tr>
+                            <td>판매가격</td>
+                            <td th:text="${orderDirect.prodPrice.intValue()}+'원'">4,000원</td>
+                        </tr>
+                        <tr>
+                            <td>구매수량</td>
+                            <td id="orderItemQuantity" th:text="${orderDirect.orderItemQuantity}" class="count">1개</td>
+                        </tr>
+                        <tr>
+                            <td>적립포인트</td>
+                            <td id="orderSavePoint" th:text="${orderDirect.orderSavePoint.intValue()}+'p'" class="count">1개</td>
+                        </tr>
+                        <tr>
+                            <td>합계</td>
+                            <td id="totalPrice" th:text="${orderDirect.totalPrice.intValue()}+'원'" class="total">4,000원</td>
+                        </tr>
+                    </table>
+                </div>
+                <h3>주문정보 입력</h3>
+                <div class="shipping">
+                    <table>
+                        <tr>
+                            <td>받는분</td>
+                            <td><input id="recieverName" type="text" name="receiver"></td>
+                        </tr>
+                        <tr>
+                            <td>휴대폰</td>
+                            <td><input id="recieverHp" type="text" name="hp"></td>
+                        </tr>
+                        <tr class="use cf">
+                            <td>포인트사용</td>
+                            <td class="use_point cf">
+                                <input th:attr="max=${orderDirect.userPoint.intValue()}" id="usePoint" type="number" class="point" value="0">
+                                <button onclick="useAllBtn()" class="point_btn">모두사용하기</button><br>
+                                <div id="ownPoint" th:text="${orderDirect.userPoint.intValue()}"  ></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>배송주소</td>
+                            <td>
+                                <input type="text" id="postcode" name="zonecode" readonly>
+                                <button onclick="execDaumPostcode(event)" id="btnZip">우편번호 검색</button>
+                                <input type="text" id="address" name="address" placeholder="기본주소 검색">
+                                <input type="text" id="addrDetail" name="addrDetail" placeholder="상세주소 입력">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>결제방법</td>
+                            <td>
+                                <select id="buyingType">
+                                    <option value="">결제방법</option>
+                                    <option>신용카드</option>
+                                    <option>무통장입금</option>
+                                    <option>체크카드</option>
+                                    <option>휴대폰</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>기타</td>
+                            <td>
+                                <textarea id="etc" name="etc"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="btns">
+                    <div onclick="postOrderDirect(event)" id="btnBuy"><img th:src="@{/images/market_btn_buy.gif}" alt="구매하기"></div>
+                    <a href="/client/products?section=product&&type=all" id="btnShopping"><img th:src="@{/images/market_btn_shopping.gif}"></a>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="layout/footer.html"></footer>
+    </div>
+    <script>
+
+
+        async function postOrderDirect(event) {
+            const submitData = {
+                "orderTotalPrice" : document.getElementById('totalPrice').innerText.slice(0, -1),
+                "orderSavePoint" : document.getElementById('orderSavePoint').innerText.slice(0,-1),
+                "orderQuantity" : document.getElementById('orderItemQuantity').innerText,
+                "recieverName" : document.getElementById('recieverName').value,
+                "recieverHp" : document.getElementById('recieverHp').value,
+                "recieverAddr" :document.getElementById('postcode').value + "/" + document.getElementById('address').value + "/" + document.getElementById('addrDetail').value,
+                "orderBuyingType" : document.getElementById('buyingType').value,
+                "orderEtc" : document.getElementById('etc').value,
+                "prodIdx" : document.getElementById('prodIdx').innerText,
+                "usePoint" : document.getElementById('usePoint').value
+            }
+            console.log(submitData)
+            event.preventDefault();
+            try {
+                const resp = await axios.post("/api/client/order/direct",submitData ,{
+                    // 요청 헤더
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (resp.status === 200) {
+                    window.location.href = resp.data;
+                }
+            } catch (error) {
+                // 오류를 처리할 코드
+                console.error('Error:', error);
+            }
+        }
+
+
+    </script>
+<script>
+    const totalPrice = document.getElementById('totalPrice').innerText.slice(0,-1)
+    let newTotalPrice = 0;
+
+    document.getElementById('usePoint').addEventListener('input', function() {
+        const max = parseFloat(this.max);
+        if (parseFloat(this.value) > max) {
+            this.value = max;
+        }
+        newTotalPrice = totalPrice - document.getElementById('usePoint').value +'원';
+        document.getElementById('totalPrice').innerText = newTotalPrice;
+    });
+    function useAllBtn(){
+        document.getElementById('usePoint').value = document.getElementById('ownPoint').innerText;
+        newTotalPrice = totalPrice - document.getElementById('ownPoint').innerText + '원'
+        document.getElementById('totalPrice').innerText = newTotalPrice;
+    }
+
+    function execDaumPostcode() {
+        event.preventDefault();
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 우편번호와 주소 정보를 해당 입력 필드에 채워줍니다.
+                document.getElementById('postcode').value = data.zonecode; // 우편번호
+                document.getElementById('address').value = data.roadAddress; // 도로명 주소
+
+                // 사용자가 선택한 주소에 추가 정보가 있다면 추가
+                var extraAddr = '';
+                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                    extraAddr += data.bname;
+                }
+                if (data.buildingName !== '' && data.apartment === 'Y') {
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                if (extraAddr !== '') {
+                    document.getElementById('address').value += ' (' + extraAddr + ')';
+                }
+
+                // 우편번호 찾기 화면이 닫힙니다.
+                document.getElementById('postcode').focus();
+            }
+        }).open();
+    }
+</script>
+</body>
+</html>

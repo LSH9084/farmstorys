@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>장보기</title>
+    <link rel="stylesheet" th:href="@{/css/product_list.css}">
+    <script th:inline="javascript">
+        var dbToday = /*[[${dbToday}]]*/ 'false';
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header th:replace="layout/header.html"></header>
+        <main>
+            <aside th:replace="layout/sidebar.html"></aside>
+            <div class="main-container">
+                <nav>
+                    <img src="../images/sub_nav_tit_cate2_tit1.png" alt="장보기"/>
+                    <p>
+                        HOME > 장보기 > <em>장보기</em>
+                    </p>
+                </nav>
+                <div><img class="header-gubun" th:src="@{/images/head_menu_line.png}"></div>
+                <!-- 내용 시작 -->
+                <p class="sort">
+                    <a href="#" data-type="all" th:classappend="${type=='all'} ? 'on' : ''" onclick="getProductsType(event)" th:text="'전체(' + ${products3} + ')'"> |</a>
+                    <a href="#" data-type="과일" onclick="getProductsType(event)" th:text="'과일(' + ${totalCntType} + ')'"> |</a>
+                    <a href="#" data-type="야채" onclick="getProductsType(event)" th:text="'야채(' + ${totalCntType2} + ')'"> |</a>
+                    <a href="#" data-type="신선야채" onclick="getProductsType(event)" th:text="'신선야채(' + ${totalCntType3} + ')'"></a>
+                </p>
+                <table class="tb-content" border="0">
+                    <tr>
+                        <td>사진</td>
+                        <td>종류</td>
+                        <td>상품명</td>
+                        <td>재고</td>
+                        <td>가격</td>
+                    </tr>
+<!--                    <img th:if="${dbToday=='true'}" th:src="@{/images/head_menu_badge.png}" alt="30%"/>-->
+                    <tr class="tr-content" th:each="product : ${products}">
+                        <td>
+                            <a th:href="@{/client/product(productIdx=${product.prodIdx})}">
+                                <img class="prod_img" th:src="@{${product.prodFilePath + product.prodFileName}}">
+                                <img th:if="${dbToday=='true'}" th:src="@{/images/head_menu_badge.png}" class="discount-img" alt="30%"/>
+                            </a>
+                        </td>
+                        <td th:text="${product.prodType}"></td>
+                        <td><a th:text="${product.prodName}" href="#"></a></td>
+                        <td th:text="${product.prodStock}">재고</td>
+                        <td th:if="${dbToday=='false'}"><strong th:text="${product.prodPrice.intValue()}"></strong>원</td>
+                        <td th:if="${dbToday=='true'}">
+                            <strong class="notPrice" th:text="${product.prodPrice.intValue()}"></strong>원
+                            <strong class="realPrice" th:text="${product.prodPrice.intValue()/100*70}"></strong>원
+                        </td>
+                    </tr>
+                </table>
+
+                <p class="paging">
+                    <a th:href="@{/client/products(page=${currentPage - 2}, section=${section}, type=${type})}" th:if="${currentPage>=2}" th:text="${currentPage}-1"></a>
+                    <a th:href="@{/client/products(page=${currentPage - 1}, section=${section}, type=${type})}" th:if="${currentPage>=1}" th:text="${currentPage}"></a>
+                    <a th:text="${currentPage}+1"></a>
+                    <a th:href="@{/client/products(page=${currentPage + 1}, section=${section}, type=${type})}" th:if="${(totalPage - currentPage)>=2}" th:text="${currentPage}+2"></a>
+                    <a th:href="@{/client/products(page=${currentPage + 2}, section=${section}, type=${type})}" th:if="${(totalPage - currentPage)>=3}" th:text="${currentPage}+3"></a>
+                </p>
+            </div>
+        </main>
+        <footer th:replace="layout/footer.html"></footer>
+    </div>
+    <script>
+        async function getProductsType(event){
+
+            event.preventDefault();
+            const type = event.target.getAttribute('data-type');
+
+            // API URL 설정
+            const url = `/api/client/products?section=product&&type=${type}`;
+            try {
+                const resp = await axios.get(url,{
+                    headers : {
+                        "Content-Type": "application/json"
+                    }
+                })
+                const products = resp.data.products;
+                console.log(dbToday)
+
+
+                if(dbToday==='false'){
+                    const tbContent = document.querySelector(".tb-content");
+                    // 첫 번째 <tr> (헤더)만 남기고 나머지 내용 삭제
+                    tbContent.innerHTML = `
+                    <tr>
+                        <td>사진</td>
+                        <td>종류</td>
+                        <td>상품명</td>
+                        <td>가격</td>
+                    </tr>
+                    `;
+
+                    // 데이터 기반으로 <tr> 추가
+                    products.forEach(product => {
+                        tbContent.innerHTML += `
+                    <tr class="tr-content">
+                        <td>
+                            <a href="/client/product?productIdx=${product.prodIdx}">
+                                <img src="${product.prodFilePath + product.prodFileName}" class="prod_img">
+
+                            </a>
+                        </td>
+                        <td>${product.prodType}</td>
+                        <td><a href="/client/product?productIdx=${product.prodIdx}">${product.prodName}</a></td>
+                        <td><strong>${product.prodPrice}</strong>원</td>
+                    </tr>
+                    `;
+                    });
+                } else {
+                    const tbContent = document.querySelector(".tb-content");
+                    // 첫 번째 <tr> (헤더)만 남기고 나머지 내용 삭제
+                    tbContent.innerHTML = `
+                    <tr>
+                        <td>사진</td>
+                        <td>종류</td>
+                        <td>상품명</td>
+                        <td>가격</td>
+                    </tr>
+                    `;
+                    products.forEach(product => {
+                        tbContent.innerHTML += `
+                    <tr class="tr-content">
+                        <td>
+                            <a href="/client/product?productIdx=${product.prodIdx}">
+                                <img src="${product.prodFilePath + product.prodFileName}" class="prod_img">
+                                <img src="/images/head_menu_badge.png" class="discount-img" alt="30%"/>
+                            </a>
+                        </td>
+                        <td>${product.prodType}</td>
+                        <td><a href="/client/product?productIdx=${product.prodIdx}">${product.prodName}</a></td>
+                        <td><strong class="notPrice">${product.prodPrice}</strong>원
+                            <strong class="realPrice">${product.prodPrice/100*70}</strong>원
+                        </td>
+                    </tr>
+                    `;
+                    });
+                }
+
+                // 테이블 내용 비우기
+
+                const paging = document.querySelector('.paging');
+                const currentPage = resp.data.currentPage;
+                const section = resp.data.section;
+                const type = resp.data.type;
+                const totalPage = resp.data.totalPage;
+
+                paging.innerHTML = "";
+
+// Helper function to create a page link
+                function createPageLink(page, text, condition = true) {
+                    if (condition) {
+                        return `<a href="/client/products?page=${currentPage+1}&section=${section}&type=${type}">${text}</a>`;
+                    }
+                    return '';
+                }
+
+// Generate page links
+                const prev2Link = createPageLink(currentPage - 2, currentPage - 1, currentPage > 1);
+                const prev1Link = createPageLink(currentPage - 1, currentPage, currentPage > 0);
+                const next1Link = createPageLink(currentPage + 1, currentPage + 2, currentPage < totalPage - 1);
+                const next2Link = createPageLink(currentPage + 2, currentPage + 3, currentPage < totalPage - 2);
+
+// Add links to pagination
+                paging.innerHTML = `
+                ${prev2Link}
+                ${prev1Link}
+                <span>${currentPage +1}</span>
+                ${next1Link}
+                ${next2Link}
+                `;
+
+                document.querySelectorAll('.sort a').forEach(link => {
+                    link.classList.remove('on');
+                });
+                event.target.classList.add('on');
+
+            } catch (e) {
+
+            }
+        }
+    </script>
+</body>
+</html>

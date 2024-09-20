@@ -1,0 +1,164 @@
+/* 메인(index) */
+.container {
+    width: 980px;
+    height: auto;
+    margin: 0 auto;
+}
+
+
+main > div {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* 메인 - slider */
+main > .slider {
+    position: relative;
+    height: 312px;
+    overflow: hidden;
+}
+
+main > .slider > img {
+    position: absolute;
+    left: 40px;
+    top: 40px;
+}
+
+main > .slider > .banner {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 230px;
+    height: 312px;
+    background-image: url('/images/main_banner_bg.jpg');
+}
+
+main > .slider > .banner > img:nth-child(1) {
+    float: right;
+    margin: 10px;
+}
+main > .slider > .banner > img:nth-child(2) {
+    margin-top: -20px;
+    margin-left: 10px;
+}
+main > .slider > .banner > img:nth-child(3) {
+    margin-left: 10px;
+}
+
+
+.bx-wrapper {
+    box-shadow: none;
+    border: none;
+    background: #fff;
+}
+
+/* 메인 - quick */
+main > .quick {
+    height: 74px;
+    overflow: hidden;
+}
+
+main > .quick > a {
+    float: left;
+    display: block;
+    width: 50%;
+    height: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+}
+main > .quick > a:nth-child(1) {background-image: url('/images/main_banner_sub1_bg.jpg');}
+main > .quick > a:nth-child(2) {background-image: url('/images/main_banner_sub2_bg.jpg');}
+
+/* 메인 - latest */
+main > .latest {
+    height: 186px;
+    overflow: hidden;
+}
+
+main > .latest > div {
+    position: relative;
+    float: left;
+    width: 33.33%;
+    height: 100%;
+}
+
+main > .latest > div > a {
+    position: absolute;
+    left: 0;
+    top: 16px;
+}
+main > .latest > div > img {
+    position: absolute;
+    left: 0;
+    bottom: 16px;
+}
+main > .latest table {
+    position: absolute;
+    right: 10px;
+    bottom: 16px;
+    color: #6a6a6a;
+}
+main > .latest table tr > td > a{
+    display: block;
+    width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 18px;
+    color: #6a6a6a;
+}
+
+/* 메인 - info */
+main > .info {
+    height: 154px;
+    overflow: hidden;
+    padding: 10px 0;
+    border-top: 2px solid #756c65;
+    box-sizing: border-box;
+}
+
+main > .info > div {
+    float: left;
+    height: 100%;
+}
+main > .info > div:nth-child(1) {
+    width: 386px;
+}
+main > .info > div:nth-child(2) {
+    width: 230px;
+    padding-left: 16px;
+    border-left: 1px solid #d7d7d7;
+    border-right: 1px solid #d7d7d7;
+    box-sizing: border-box;
+}
+main > .info > div:nth-child(3) {
+    width: 360px;
+    padding-left: 10px;
+    box-sizing: border-box;
+}
+
+main > .info > div > .tit {
+    margin-bottom: 16px;
+}
+
+main > .info > div > .tel {
+    overflow: hidden;
+}
+main > .info > div > .tel > * {
+    float: left;
+    margin-right: 16px;
+}
+
+main > .info > div > .tel > .time {
+    line-height: 18px;
+    color: #666;
+}
+
+main > .info > div > .btns {
+    margin-top: 16px;
+}
+
+main > .info > div > .account {
+    line-height: 18px;
+    color: #666;
+}

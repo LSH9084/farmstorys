@@ -1,0 +1,168 @@
+main {
+    display: flex;
+    position: relative;
+}
+
+.order {
+    width: 100%;
+    padding: 20px;
+    padding-left: 40px;
+}
+
+.order nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-gubun {
+    width: 100%;
+    height: 2px;
+    margin-bottom: 40px;
+    margin-top: 10px;
+}
+
+.order nav em {
+    color: #91BA15;
+    font-weight: 600;
+}
+
+.order {}
+.order > h3 {
+    margin: 10px 0;
+    font-family: '고딕';
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.order > .info {
+    width: 100%;
+    height: 270px;
+    position: relative;
+    overflow: hidden;
+}
+.order > .info > img {
+    float: left;
+}
+.order > .info > table {
+    float: right;
+    width: 60%;
+    height: 225px;
+    margin-left: 16px;
+    border-top: 2px solid #e7e7e7;
+    border-bottom: 2px solid #e7e7e7;
+}
+
+.order > .info > table em {
+    color: #777;
+}
+.order > .info > table .total {
+    font-weight: bold;
+    color: #c20a0a;
+}
+
+.order > .info > .btnOrder {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+
+.order > .shipping {}
+.order > .shipping table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid #be0808;
+}
+.order > .shipping table tr {}
+.order > .shipping table td {
+    padding: 10px;
+    border-bottom: 1px solid #d7d7d7;
+}
+.order > .shipping table td:first-child {
+    width: 120px;
+    background: #f7f7f7;
+}
+
+.order > .shipping input {
+    height: 18px;
+    border: 1px solid #d7d7d7;
+    outline: none;
+}
+
+.order > .shipping input[name=address] {
+    display: block;
+    width: 320px;
+    margin-top: 2px;
+}
+
+.order > .shipping input[name=addrDetail] {
+    display: block;
+    width: 320px;
+    margin-top: 2px;
+}
+
+.order > .shipping textarea {
+    width: 320px;
+    height: 60px;
+    border: 1px solid #d7d7d7;
+    resize: none;
+    outline: none;
+}
+
+.order > p {
+    margin: 16px 0;
+    text-align: center;
+}
+
+#btnZip {
+    width: 91px;
+    height: 20px;
+    background-image: url('../images/btn_post_search.gif');
+    font-size: 0;
+    border: none;
+    margin-left: 4px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.order .btns {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.list-img{
+    width: 225px;
+    height: 225px;
+}
+
+#btnBuy img {
+    cursor: pointer;
+}
+
+.point_btn {
+    background-color: #2e658a;
+    color: #dee4e8;
+    border: none;
+    border-radius: 2px;
+    box-shadow: -0.8px -0.8px 0.8px #356f95;
+    border-top: 1.2px solid #5093c0;
+    border-left: 1.2px solid #5093c0;
+    font-size: 10px;
+    text-shadow: -0.5px 0.5px 0.5px #6990a9;
+    padding: 3px 5px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+#btnShopping{
+    cursor: pointer;
+}
+
+
+
+/* 사용가능 2,000 */
+.order_tb .use_point > div {display: flex; flex-direction: column; flex-wrap: nowrap; justify-content: center; align-items: center; box-sizing: border-box; margin: 1.5px 0 0 0 ; width: 332px; text-align: left; align-items: flex-start;}
+#ownPoint {
+    margin-top: 5px;
+}

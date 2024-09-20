@@ -1,0 +1,669 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>게시판</title>
+    <link rel="stylesheet" th:href="@{/css/board_list.css}">
+</head>
+<body>
+    <div class="container">
+        <header th:replace="layout/header.html"></header>
+        <main>
+            <aside th:replace="layout/sidebar.html"></aside>
+            <div class="list">
+                <nav>
+                    <img id="dynamicImg" alt="장보기" />
+                    <p>
+                        HOME >
+                        <span id="dynamicText1"></span> >
+                        <em id="dynamicText2"></em>
+                    </p>
+                </nav>
+                <div><img class="header-gubun" th:src="@{/images/head_menu_line.png}"></div>
+                <div class="main-contents">
+                    <div class="main-header">
+                        <h1>글목록 </h1>
+                    </div>
+                    <form class="form">
+                        <input type="search" placeholder="제목 키워드, 글쓴이 검색">
+                        <input type="submit" value="검색">
+                    </form>
+                    <table>
+                        <tr>
+                            <th>번호</th>
+                            <th class="th2">제목</th>
+                            <th>글쓴이</th>
+                            <th class="th4">날짜</th>
+                            <th>조회</th>
+                        </tr>
+                        <tr th:if="${section=='community' && type!='qna'}" th:data-idx="${board.boardIdx}" th:each="board : ${boards}" onclick="getBoard(event)">
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.boardIdx}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.boardTitle}+${'('+board.boardCommentCnt+')'}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.userName}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:if="${board.boardCreateAt != board.boardModifyAt}" th:text="${board.boardModifyAt}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:if="${board.boardCreateAt == board.boardModifyAt}" th:text="${board.boardCreateAt}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.boardViewCnt}"></td>
+                        </tr>
+                        <tr th:if="${section=='croptalk'}" th:data-idx="${board.boardIdx}" th:each="board : ${boards}" onclick="getBoard(event)">
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.boardIdx}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.boardTitle}+${'('+board.boardCommentCnt+')'}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.userName}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:if="${board.boardCreateAt != board.boardModifyAt}" th:text="${board.boardModifyAt}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:if="${board.boardCreateAt == board.boardModifyAt}" th:text="${board.boardCreateAt}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.boardViewCnt}"></td>
+                        </tr>
+                        <tr th:if="${section=='community' && type=='qna' && board.owner=='true' || section=='community' && type=='qna' && admin=='true'}" th:data-idx="${board.boardIdx}" th:each="board : ${boards}" onclick="getBoard(event)">
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.boardIdx}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.boardTitle}+${'('+board.boardCommentCnt+')'}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.userName}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:if="${board.boardCreateAt != board.boardModifyAt}" th:text="${board.boardModifyAt}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:if="${board.boardCreateAt == board.boardModifyAt}" th:text="${board.boardCreateAt}"></td>
+                            <td th:data-idx="${board.boardIdx}" th:text="${board.boardViewCnt}"></td>
+                        </tr>
+                    </table>
+                    <div class="main-footer">
+                        <div class="button">
+                            <a th:href="@{/client/boards(page=0,section=${section},type=${type})}" ><<</a>
+                            <a th:href="@{/client/boards(page=${currentPage - 2},section=${section},type=${type})}" th:if="${currentPage>=2}" th:text="${currentPage}-1"></a>
+                            <a th:href="@{/client/boards(page=${currentPage - 1},section=${section},type=${type})}" th:if="${currentPage>=1}" th:text="${currentPage}"></a>
+                            <a th:text="${currentPage}+1"></a>
+                            <a th:href="@{/client/boards(page=${currentPage + 1},section=${section},type=${type})}" th:if="${(totalPage - currentPage)>=2}" th:text="${currentPage}+2"></a>
+                            <a th:href="@{/client/boards(page=${currentPage + 2},section=${section},type=${type})}" th:if="${(totalPage - currentPage)>=3}" th:text="${currentPage}+3"></a>
+                            <a th:href="@{/client/boards(page=${totalPage.intValue()-1},section=${section},type=${type})}" >>></a>
+                        </div>
+                        <div th:if="${section =='community' && type=='notice' && admin=='true'}" class="write">
+                            <input onclick="showPostForm()" type="button" class="write-button" value="글쓰기">
+                        </div>
+                        <div th:if="${section =='community' && type=='faq' && admin=='true'}" class="write">
+                            <input onclick="showPostForm()" type="button" class="write-button" value="글쓰기">
+                        </div>
+                        <div th:if="${section =='community' && type!='notice' && section =='community' && type!='faq' }" class="write">
+                            <input onclick="showPostForm()" type="button" class="write-button" value="글쓰기">
+                        </div>
+                        <div th:if="${section !='community'}" class="write">
+                            <input onclick="showPostForm()" type="button" class="write-button" value="글쓰기">
+                        </div>
+                    </div>
+                </div>
+                <div class="main-contents2">
+                    <h1>글쓰기</h1>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>제목</th>
+                                <td><input class="postValue" id="boardTitle" type="text" style="width: 100%; height: 30px; border: none; outline:none;"  placeholder="제목을 입력하세요.."></td>
+                            </tr>
+                            <tr>
+                                <th>내용</th>
+                                <td><textarea class="postValue" id="boardContent" style="width: 100%; height: 200px; border: none; outline: none" placeholder="내용을 입력하세요.." ></textarea></td>
+                            </tr>
+                            <tr>
+                                <th>파일</th>
+                                <td class="file-flex-box">
+                                    <span>최대 2개 첨부파일 가능, 각 파일당 최대 10MB까지 가능</span>
+                                    <label for="file-upload" class="file-upload-label">
+                                        <input id="file-upload" name="file-one" type="file">
+                                    </label>
+                                    <label id="upload-other" for="file-upload" class="file-upload-label">
+                                        <input id="file-upload-other" name="file-two" type="file">
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="button-group">
+                            <button type="button" onclick="cancelPost()" class="cancel">취소</button>
+                            <button id="postBoardBtn" type="button" onclick="postBoard()" disabled class="submit">작성완료</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="main-contents3">
+                    <h1 style="margin-bottom: 0;">글보기</h1>
+                    <table>
+                        <tr>
+                            <th>제목</th>
+                            <td><input id="viewBoardTitle" readonly type="text" style="width: 100%; height: 30px; border: none; outline: none" value="제목입니다."></td>
+                        </tr>
+                        <tr>
+                            <th>작성자</th>
+                            <td><input id="viewBoardUserName" readonly type="text" style="width: 100%; height: 20px; border: none; outline: none" value="제목입니다."></td>
+                        </tr>
+                        <tr>
+                            <th>파일</th>
+                            <td id="viewBoardFiles">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>내용</th>
+                            <td><textarea id="viewBoardContent" readonly style="width: 100%; border: none; outline: none">파일 없음</textarea></td>
+                        </tr>
+                    </table>
+                    <div class="button-group">
+                        <button class="viewBoardDelete" onclick="deleteBoard(event)" type="button">삭제</button>
+                        <button class="viewBoardModify" onclick="putPost(event)" type="button" style="border: 1px solid #ddd; background-color: white;">수정</button>
+                        <button class="viewBoardComment" onclick="getComments(event)" type="button" style="border: 1px solid #ddd; background-color: white;">댓글</button>
+                        <button th:data-section="${section}" th:data-type="${type}" class="viewBoardList" onclick="cancelPost(event)" type="button" style="border: 1px solid #ddd; background-color: white;">목록</button>
+                    </div>
+                    <div class="comment-section">
+                        <div class="comment-list">
+                            <h4>댓글목록</h4>
+                            <div class="comment-item" style="width: auto;">
+                                <div class="comment-item_no-comments">등록된 댓글이 없습니다.</div>
+                                <div>
+                                    <span id="getCommentsCreateAt">등록일 : 20-05-20</span>
+                                    <span id="getCommentsModifyAt">수정일 : 20-05-20</span>
+                                    <strong id="getCommentsUserNick">길동이</strong>
+
+                                    <br>
+                                    <p id="getCommentsContent" style="margin-top: 10px; ">댓글 샘플입니다.</p>
+                                </div>
+                                <div class="comment-buttons">
+                                    <button id="getCommentsDelete" onclick="deleteComment()" type="button" class="cancel">삭제</button>
+                                    <button id="getCommentsModify" onclick="putComment()" type="button">수정</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="comment-box">
+                            <h4>댓글쓰기</h4>
+                            <textarea id="postCommentsConetent" style="width: 100%; height: 100px; border: none;  outline: none; resize:none; "></textarea>
+                            <div class="button-group">
+                                <button onclick="closeComments()" type="button" class="cancel">취소</button>
+                                <button id="postCommentBtn"  onclick="postComment(event)" type="button">작성완료</button>
+                            </div>
+                        </div>
+                        <div class="comment-box2">
+                            <h4>댓글수정</h4>
+                            <textarea id="putCommentsConetent" style="width: 100%; height: 100px; border: none;  outline: none; resize:none; "></textarea>
+                            <div class="button-group">
+                                <button onclick="closeComments()" type="button" class="cancel">취소</button>
+                                <button id="putCommentBtn"  onclick="putComment(event)" type="button">작성완료</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="main-contents4">
+                    <h1 style="margin-bottom: 0;">글수정</h1>
+                    <form>
+                        <table>
+                            <tr>
+                                <th>제목</th>
+                                <td><input id="modifyBoardTitle" type="text" style="width: 100%; height: 30px; border: none; outline: none" placeholder="제목을 입력하세요."></td>
+                            </tr>
+                            <tr>
+                                <th class="vertical-center">내용</th> <!-- "내용"을 가로 및 세로로 모두 가운데 정렬 -->
+                                <td><textarea id="modifyBoardContent" style="width: 100%; height: 200px; resize: none; border: none; outline: none"></textarea></td> <!-- '내용을 입력하세요.' placeholder 제거 -->
+                            </tr>
+                            <tr>
+                                <th>파일</th>
+                                <td class="file-flex-box">
+                                    <span>최대 2개 첨부파일 가능, 각 파일당 최대 10MB까지 가능</span>
+                                    <label for="file-upload2" class="file-upload-label">
+                                        <input id="file-upload2" name="file-one2" type="file">
+                                    </label>
+                                    <label id="upload-other2" for="file-upload" class="file-upload-label">
+                                        <input id="file-upload-other2" name="file-two2" type="file">
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="button-group">
+                            <button onclick="getBoard(event)" type="button" class="modifyBoardCancel">취소</button>
+                            <button id="modifyBoardPut" onclick="putBoard(event)" type="button" class="submit">작성완료</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="layout/footer.html"></footer>
+    </div>
+
+    <script th:inline="javascript">
+        // Thymeleaf 변수를 JavaScript로 전달
+        var section = /*[[${section}]]*/ 'defaultSection';
+        var type = /*[[${type}]]*/ 'defaultType';
+
+        // 이미지와 텍스트를 설정하는 함수
+        function updateNav() {
+            var imgSrc = '';
+            var mainText = '';
+            var subText = '';
+
+            // 조건에 맞춰 이미지 경로와 텍스트 설정
+            if (section === 'croptalk') {
+                mainText = '농작물이야기';
+
+                if (type === 'story') {
+                    imgSrc = '../images/sub_nav_tit_cate3_tit1.png';
+                    subText = '농작물이야기';
+                } else if (type === 'grow') {
+                    imgSrc = '../images/sub_nav_tit_cate3_tit2.png';
+                    subText = '텃밭가꾸기';
+                } else if (type === 'school') {
+                    imgSrc = '../images/sub_nav_tit_cate3_tit3.png';
+                    subText = '귀농학교';
+                }
+            } else if(section === 'event'){
+                mainText = '이벤트';
+                imgSrc = '../images/sub_nav_tit_cate4_tit1.png'
+                subText = '이벤트';
+            } else if(section === 'community'){
+                mainText = '커뮤니티';
+                if(type === 'notice'){
+                    imgSrc = '../images/sub_nav_tit_cate5_tit1.png';
+                    subText = '공지사항';
+                } else if(type === 'menu'){
+                    imgSrc = '../images/sub_nav_tit_cate5_tit2.png';
+                    subText = '오늘의식단';
+                } else if(type === 'chef'){
+                    imgSrc = '../images/sub_nav_tit_cate5_tit3.png';
+                    subText = '나도요리사';
+                } else if(type === 'qna'){
+                    imgSrc = '../images/sub_nav_tit_cate5_tit4.png';
+                    subText = '1:1고객문의';
+                } else if(type === 'faq'){
+                    imgSrc = '../images/sub_nav_tit_cate5_tit5.png';
+                    subText = '자주묻는질문';
+                }
+            }
+
+
+            // 이미지와 텍스트를 설정
+            document.getElementById('dynamicImg').src = imgSrc;
+            document.getElementById('dynamicText1').textContent = mainText;
+            document.getElementById('dynamicText2').textContent = subText;
+        }
+
+        // 초기화
+        updateNav();
+    </script>
+    <script>
+        function showPostForm() {
+            document.querySelector('.main-contents').style.display = 'none';
+            document.querySelector('.main-contents2').style.display = 'block';
+            document.querySelector('.main-contents3').style.display = 'none';
+            document.querySelector('.main-contents4').style.display = 'none';
+        }
+
+        function cancelPost(event) {
+            window.location.href = `/client/boards?section=${event.target.dataset.section}&&type=${event.target.dataset.type}`
+        }
+
+
+        async function getBoard(event){
+            try {
+                const resp = await axios.get('/api/client/board',{
+                    headers : {
+                        "Content-Type": "application/json",
+                    },
+                    params : {
+                        "boardIdx" : event.target.dataset.idx
+                    }
+                })
+                if(resp.data.status==="IDXEQUAL"){
+                    document.querySelector('.viewBoardDelete').style.display = 'inline'
+                    document.querySelector('.viewBoardModify').style.display = 'inline'
+                }
+                if(resp.data.admin==="true"){
+                    document.querySelector('.viewBoardDelete').style.display = 'inline'
+                    document.querySelector('.viewBoardModify').style.display = 'inline'
+                }
+                document.getElementById('viewBoardTitle').value = resp.data.board.boardTitle
+                document.getElementById('viewBoardUserName').value = resp.data.board.userNick
+                const files = resp.data.board.files;
+                if(files.length>0){
+                    document.getElementById('viewBoardFiles').innerText=``
+                    files.map((v)=>{
+                        const span = document.createElement('span')
+                        span.classList.add('no-underline')
+                        span.innerHTML = `
+                        <div id="${v.fileIdx}" onclick="getDownload(event)">${v.fileName}  ${v.downloadCnt}회 다운로드 </div>
+                    `
+                        document.getElementById('viewBoardFiles').appendChild(span)
+                    })
+                } else {
+                    document.getElementById('viewBoardFiles').innerText=`파일없음`
+                }
+                document.getElementById('viewBoardContent').innerHTML = resp.data.board.boardContent
+
+                const boardIdx = resp.data.board.boardIdx;
+                document.querySelector('.modifyBoardCancel').dataset.idx = boardIdx;
+                const viewBoardDelete = document.querySelector('.viewBoardDelete')
+                viewBoardDelete.dataset.idx = boardIdx;
+                document.querySelector('.viewBoardModify').dataset.idx = resp.data.board.boardIdx;
+                document.querySelector('.viewBoardComment').dataset.idx = resp.data.board.boardIdx;
+            } catch (e) {
+
+            } finally {
+                document.querySelector('.main-contents').style.display = 'none';
+                document.querySelector('.main-contents2').style.display = 'none';
+                document.querySelector('.main-contents4').style.display = 'none';
+                document.querySelector('.main-contents3').style.display = 'block';
+                document.getElementById('viewBoardContent').style.height = document.getElementById('viewBoardContent').scrollHeight +'px'
+            }
+        }
+
+        async function getDownload(event){
+            console.log(event.target.id)
+
+            try {
+                const resp = await axios.get("/api/client/board/download",{
+                    params : {
+                        "boardFileIdx" : event.target.id
+                    },
+                    responseType: 'blob'
+                })
+                const url = window.URL.createObjectURL(new Blob([resp.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                const fileName = resp.headers['content-disposition']
+                    .split(';')[1]
+                    .split('filename=')[1]
+                    .replace(/"/g, ''); // 파일 이름을 Content-Disposition 헤더에서 추출
+
+                link.setAttribute('download', fileName); // 다운로드 속성 설정
+                document.body.appendChild(link);
+                link.click();
+
+                // 다운로드 완료 후 링크 제거
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            } catch (e) {
+
+            }
+        }
+
+        function putPost(event){
+            document.querySelector('.main-contents').style.display = 'none';
+            document.querySelector('.main-contents2').style.display = 'none';
+            document.querySelector('.main-contents3').style.display = 'none';
+            document.getElementById('modifyBoardPut').dataset.idx = event.target.dataset.idx;
+            document.querySelector('.main-contents4').style.display = 'block';
+        }
+    </script>
+    <script>
+        document.getElementById('file-upload').addEventListener('change', () => {
+            // 파일이 선택되었는지 확인
+            if (document.getElementById('file-upload').value !== '') {
+                // 다른 요소를 표시
+                document.getElementById('upload-other').style.display = 'block';
+            } else {
+                // 파일이 선택되지 않으면 숨김 처리 (필요한 경우)
+                document.getElementById('upload-other').style.display = 'none';
+            }
+        });
+
+        document.getElementById('file-upload2').addEventListener('change', () => {
+            // 파일이 선택되었는지 확인
+            if (document.getElementById('file-upload2').value !== '') {
+                // 다른 요소를 표시
+                document.getElementById('upload-other2').style.display = 'block';
+            } else {
+                // 파일이 선택되지 않으면 숨김 처리 (필요한 경우)
+                document.getElementById('upload-other2').style.display = 'none';
+            }
+        });
+
+        let boardTitleValue = false;
+        let boardContentValue = false;
+        document.getElementById('boardTitle').addEventListener('input', (e) => {
+            boardTitleValue = e.target.value.trim().length > 0;
+            checkFormValidity();
+        });
+
+        document.getElementById('boardContent').addEventListener('input', (e) => {
+            boardContentValue = e.target.value.trim().length > 0;
+            checkFormValidity();
+        });
+
+        // Function to check form validity
+        function checkFormValidity() {
+            const isValid = boardTitleValue && boardContentValue;
+            document.getElementById('postBoardBtn').disabled = !isValid;
+        }
+
+
+
+    </script>
+    <script>
+        async function postBoard(){
+            const formData = new FormData();
+
+            const boardData = {
+                boardTitle : document.getElementById('boardTitle').value,
+                boardContent : document.getElementById('boardContent').value,
+                "section" : section,
+                "type" : type
+            }
+
+            formData.append('board',JSON.stringify(boardData))
+
+            const fileOne = document.querySelector('input[name="file-one"]').files;
+            const fileTwo = document.querySelector('input[name="file-two"]').files;
+
+            if(fileOne.length>0){
+                formData.append('file_one',fileOne[0]);
+            }
+            if(fileTwo.length>0){
+                formData.append('file_two',fileTwo[0]);
+            }
+
+            try {
+                const resp = await axios.post('/api/client/board',formData,{
+                    headers : {
+                        "Content-Type": "multipart/form-data",
+                    }
+                });
+                // console.log(resp.data)
+                window.location.href = resp.data;
+            } catch (e) {
+
+            }
+        }
+
+        async function putBoard(event){
+            const formData = new FormData();
+            const boardData = {
+                boardTitle : document.getElementById('modifyBoardTitle').value,
+                boardContent : document.getElementById('modifyBoardContent').value,
+                boardIdx : event.target.dataset.idx
+            }
+            formData.append('board',JSON.stringify(boardData))
+
+            const fileOne = document.querySelector('input[name="file-one2"]').files;
+            const fileTwo = document.querySelector('input[name="file-two2"]').files;
+
+            if(fileOne.length>0){
+                formData.append('file_one',fileOne[0]);
+            }
+            if(fileTwo.length>0){
+                formData.append('file_two',fileTwo[0]);
+            }
+
+            try {
+                const resp = await axios.put('/api/client/board', formData,{
+                    headers : {
+                        "Content-Type": "multipart/form-data",
+                    }
+                })
+                document.getElementById('modifyBoardTitle').value = ''
+                document.getElementById('modifyBoardContent').value =''
+                document.getElementById('file-upload2').value = '';
+                document.getElementById('file-upload-other2').value =''
+                document.getElementById('upload-other2').style.display = 'none'
+                getBoard(event)
+
+            } catch (e) {
+
+            }
+        }
+
+        async function deleteBoard(event){
+            console.log(event.target.dataset.idx)
+            const submitData = {
+                "section" : section,
+                "type" : type,
+                "boardIdx" : event.target.dataset.idx
+            }
+
+            try {
+                const resp = await axios.delete('/api/client/board',{
+                    headers : {
+                        "Content-Type": "application/json",
+                    },
+                    params : submitData
+                })
+                window.location.href = resp.data;
+            } catch (e) {
+
+            }
+        }
+    </script>
+    <script>
+        async function getComments(event){
+            try {
+                const resp = await axios.get('/api/client/comments',{
+                    headers : {
+                        "Content-Type": "application/json",
+                    },
+                    params : {
+                        "boardIdx" : event.target.dataset.idx
+                    }
+                })
+
+                const comments = resp.data.comments;
+                const commentList = document.querySelector('.comment-list')
+                if(resp.data.empty==="EMC"){
+                    commentList.innerHTML = `
+                        <h4>댓글목록</h4>
+                        <div class="comment-item_no-comments">등록된 댓글이 없습니다.</div>
+                        `
+                    document.getElementById('postCommentBtn').dataset.idx = resp.data.boardIdx
+                } else {
+                    commentList.innerHTML = `<h4>댓글목록</h4>`;
+
+                    document.getElementById('postCommentBtn').dataset.idx = resp.data.boardIdx
+
+                    comments.map(v => {
+                        const commentItem = document.createElement('div')
+                        commentItem.classList.add('comment-item')
+                        commentItem.innerHTML = `
+                        <div>
+                            <!-- commentCreateAt과 commentModifyAt이 다를 때는 commentModifyAt 표시 -->
+                            ${v.commentCreateAt !== v.commentModifyAt ? `
+                                <span id="getCommentsCreateAt">${v.commentModifyAt}</span>
+                            ` : `
+                                <span id="getCommentsCreateAt">${v.commentCreateAt}</span>
+                            `}
+                            ${v.admin === 'true' ? `
+                                <strong id="getCommentsUserNick">운영자</strong>
+                            ` : v.writer === 'true' ? `
+                                <strong id="getCommentsUserNick">글쓴이</strong>
+                            ` : `
+                                <strong id="getCommentsUserNick">${v.userNick}</strong>
+                            `}
+                            <br>
+                            <p id="getCommentsContent" style="margin-top: 10px;">${v.commentContent}</p>
+                        </div>
+                        <div class="comment-buttons">
+                            <!-- equalsIdx가 "true"일 때만 삭제, 수정 버튼 표시 -->
+                            ${v.equalsIdx === "true" || v.role === "true" ? `
+                                <button data-comment="${v.commentIdx}" data-idx="${v.boardIdx}" id="getCommentsDelete" onclick="deleteComment(event)" type="button" class="cancel">삭제</button>
+
+                            ` : ''}
+                            ${v.equalsIdx === "true" ? `
+                                <button data-comment="${v.commentIdx}" data-idx="${v.boardIdx}" id="getCommentsModify" onclick="modifier(event)" type="button">수정</button>
+                            ` : ''}
+                        </div>
+                    `;
+                        commentList.appendChild(commentItem)
+
+                    })
+                }
+            } catch (e) {
+                console.log(e)
+            } finally {
+                document.querySelector('.comment-section').style.display = 'block';
+
+            }
+        }
+
+        async function postComment(event){
+            console.log(event.target.dataset.idx)
+            const submitData = {
+                "boardIdx" : event.target.dataset.idx,
+                "commentContent" : document.getElementById('postCommentsConetent').value
+
+            }
+
+            try {
+                const resp = await axios.post('/api/client/comment',submitData,{
+                    headers : {
+                        "Content-Type": "application/json",
+                    }
+                })
+                // window.location.href = resp.data;
+                if(resp.status === 200){
+                    document.getElementById('postCommentsConetent').value = ``;
+                }
+
+            } catch (e) {
+
+            } finally {
+                await getComments(event);
+            }
+        }
+
+        function modifier(event){
+            document.querySelector('.comment-box2').style.display = 'block';
+            document.querySelector('.comment-box').style.display = 'none';
+            document.getElementById('putCommentBtn').dataset.comment = event.target.dataset.comment
+            document.getElementById('putCommentBtn').dataset.idx = event.target.dataset.idx
+        }
+
+        async function putComment(event){
+            const submitData = {
+                "commentIdx" : event.target.dataset.comment,
+                "commentContent" : document.getElementById('putCommentsConetent').value
+            }
+            try {
+                const resp = await axios.put('/api/client/comment', submitData,{
+                    headers : {
+                        "Content-Type": "application/json",
+                    }
+                })
+                if(resp.status === 200){
+                    document.getElementById('putCommentsConetent').value = ``;
+                    document.querySelector('.comment-box').style.display = 'block';
+                    document.querySelector('.comment-box2').style.display = 'none';
+                }
+
+            } catch (e) {
+
+            } finally {
+                await getComments(event);
+            }
+        }
+
+        async function deleteComment(event){
+            try {
+                const resp = await axios.delete('/api/client/comment',{
+                    headers : {
+                        "Content-Type": "application/json",
+                    },
+                    params : {
+                        "commentIdx" : event.target.dataset.comment
+                    }
+                })
+            } catch (e) {
+
+            } finally {
+                await getComments(event);
+            }
+        }
+
+        function closeComments(){
+            document.querySelector('.comment-section').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

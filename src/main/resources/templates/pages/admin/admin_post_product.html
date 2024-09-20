@@ -1,0 +1,154 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="script">
+    <script src="/js/axios.min.js"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/admin_post_product.css}">
+    <title>상품등록(관리자)</title>
+</head>
+<body>
+    <div class="container">
+        <header th:replace="layout/ad_header.html"></header>
+        <main>
+            <aside th:replace="layout/ad_sidebar.html"></aside>
+            <div class="main-container">
+                <div id="section2_main">
+                    <div id="section2_title">상품등록</div>
+                    <div id="article_wrapper">
+                        <div id="article1">
+                            <div>
+                                <table id="prod_table">
+                                    <tr id="prod_name">
+                                        <td>상품명</td>
+                                        <td><input id="prodName" type="text" name="prod_name"></td>
+                                    </tr>
+                                    <tr id="prod_category">
+                                        <td>종류</td>
+                                        <td>
+                                            <select id="prodType" name="type">
+                                                <option value="">종류</option>
+                                                <option value="과일">과일</option>
+                                                <option value="야채">야채</option>
+                                                <option value="신선야채">신선야채</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr id="prod_price">
+                                        <td>가격</td>
+                                        <td><input id="prodPrice" type="text" name="price"></td>
+                                    </tr>
+                                    <tr id="prod_point">
+                                        <td>포인트</td>
+                                        <td><input id="prodSavePoint" type="text" name="point">포인트는 가격의 1%</td>
+                                    </tr>
+                                    <tr id="prod_discount">
+                                        <td>할인</td>
+                                        <td>
+                                            <select id="prodDiscount" name="discount">
+                                                <option value="5">5%</option>
+                                                <option value="10">10%</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr id="prod_delivery">
+                                        <td>배송비</td>
+                                        <td>
+                                            <input type="radio" name="deliveryfee" value="2000">2,000원
+                                            <input type="radio" name="deliveryfee" value="3000">3,000원
+                                            <input type="radio" name="deliveryfee" value="5000">5,000원
+                                            <input type="radio" name="deliveryfee" value="0">무료
+                                        </td>
+                                    </tr>
+                                    <tr id="prod_stock">
+                                        <td>재고</td>
+                                        <td><input id="prodStock" type="text" name="stock"></td>
+                                    </tr>
+                                    <tr id="prod_image">
+                                        <td>상품이미지</td>
+                                        <td>
+                                            <a class="img_describe">상품목록 이미지(약 120 X 120)</a>
+                                            <div>
+                                                <input type="file" name="file_list"/>
+                                            </div>
+                                            <a class="img_describe">기본정보 이미지(약 240 X 240)</a>
+                                            <div>
+                                                <input type="file" name="file_basic"/>
+                                            </div>
+                                            <a class="img_describe">상품설명 이미지(약 120 X 120)</a>
+                                            <div>
+                                                <input type="file" name="file_description"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="prod_etc">
+                                        <td>기타</td>
+                                        <td><textarea id="prodEtc" name="etc"></textarea></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="prod_heading">
+                                <a href="#" id="prod_del">취소</a>
+                                <button onclick="postProduct()" type="button" id="prod_reg">상품등록</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="layout/ad_footer.html"></footer>
+    </div>
+    <script>
+        async function postProduct(){
+            // const form = document.getElementById('article1');
+
+            const formData = new FormData();
+
+            const productData = {
+                prodName: document.getElementById('prodName').value,
+                prodType: document.getElementById('prodType').value,
+                prodPrice: document.getElementById('prodPrice').value,
+                prodSavePoint: document.getElementById('prodSavePoint').value,
+                prodDiscount: document.getElementById('prodDiscount').value,
+                prodDelivery: document.querySelector('input[name="deliveryfee"]:checked') ? document.querySelector('input[name="deliveryfee"]:checked').value : '',
+                prodStock: document.getElementById('prodStock').value,
+                prodEtc: document.getElementById('prodEtc').value
+            };
+
+            formData.append('product',JSON.stringify(productData))
+
+            // 파일 데이터 추가
+            const fileListInput = document.querySelector('input[name="file_list"]').files;
+            const fileBasicInput = document.querySelector('input[name="file_basic"]').files;
+            const fileDescriptionInput = document.querySelector('input[name="file_description"]').files;
+
+            if (fileListInput.length > 0) {
+                formData.append('file_list', fileListInput[0]);
+            }
+            if (fileBasicInput.length > 0) {
+                formData.append('file_basic', fileBasicInput[0]);
+            }
+            if (fileDescriptionInput.length > 0) {
+                formData.append('file_description', fileDescriptionInput[0]);
+            }
+
+
+            try {
+                const resp = await axios.post("/api/admin/product",formData,{
+                    headers : {
+                        "Content-Type" : "multipart/form-data"
+                    }
+                })
+                window.location.href = resp.data;
+            } catch (e) {
+
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="script">
+    <script src="/js/axios.min.js"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/user_info.css}">
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <title>상품 상세보기</title>
+</head>
+<body>
+<div class="container">
+    <header th:replace="layout/header.html"></header>
+    <main>
+        <aside th:replace="layout/sidebar.html"></aside>
+        <div class="main-container">
+            <form>
+                <h2 class="h2">사이트 이용정보 입력</h2>
+                <div class="border-div">
+                    <table class="tb_site">
+                        <tr>
+                            <th>아이디</th>
+                            <td>
+                                <div th:text="${user.userId}" class="id-display" id="userIdInput">dltkdgns</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>비밀번호</th>
+                            <td>
+                                <input id="checkPwd" class="inp1" type="password" placeholder="비밀번호 입력">
+                                <div id="error-pwd"></div>
+                                <div id="success-pwd"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>비밀번호 확인</th>
+                            <td>
+                                <input id="checkConfirm" class="inp1" type="password" placeholder="비밀번호 확인">
+                                <button id="verifyBtn2" type="button" disabled onclick="checkPwdBtn()">회원 인증</button>
+                                <button id="verifyBtn3" type="button" disabled onclick="modifyPwd()">비밀번호 수정</button>
+                                <div id="error-confirm"></div>
+                                <div id="success-confirm"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>회원가입날짜</th>
+                            <td>
+                                <div th:text="${user.userCreateAt}" class="createAt">2022-17-16</div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <h2 class="h2 h2top my-info2">개인정보 입력</h2>
+                <div class="border-div my-info">
+                    <table class="tb_info">
+                        <tr>
+                            <th>이름</th>
+                            <td>
+                                <input th:placeholder="${user.userName}" id="userName" class="inp1" name="userName" type="text" placeholder="이름 입력">
+                                <div id="error-name"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>별명</th>
+                            <td >
+                                <div class="nick_div">
+                                    <input th:placeholder="${user.userNick}" class="inp1" id="userNick" name="userNick" type="text" placeholder="별명 입력">
+                                    <img onclick="checkNick()" class="nick-check" th:src="@{/images/chk_id.gif}" alt="중복확인">
+                                    <div id="error-nick"></div>
+                                    <div id="success-nick"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>이메일</th>
+                            <td>
+                                <div>
+                                    <input th:placeholder="${user.userEmail}" class="inp1" id="userEmail" name="userEmail" type="email" placeholder="이메일 입력">
+                                    <img class="send-email" onclick="checkEmail()" th:src="@{/images/chk_auth.png}" alt="인증번호 받기">
+                                    <div id="error-email"></div>
+                                    <div id="success-email">
+                                        <input id="emailCode" class="inp1" type="password" placeholder="인증번호 입력">
+                                        <button id="verifyBtn" type="button" onclick="verifyCode()">인증하기</button>
+                                        <span id="timer">03:00</span>
+                                    </div>
+                                    <div id="error-verify"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>휴대폰</th>
+                            <td>
+                                <input th:placeholder="${user.userHp}" id="userHp" class="inp1" name="userHp" type="text" placeholder="휴대폰 입력">
+                                <div id="error-hp"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>주소</th>
+                            <td class="addr-display">
+                                <input th:placeholder="${user.addrZone}" class="inp1 addr1" id="postcode" name="addrZone" type="text" placeholder="우편번호">
+                                <img class="find-addr" onclick="execDaumPostcode()" th:src="@{/images/chk_post.gif}" alt="우편번호 찾기">
+                                <input th:placeholder="${user.addr}" class="inp2 addr2" id="address" name="addr" type="text" placeholder="주소 검색">
+                                <input th:placeholder="${user.addrDetail}" class="inp2 addr3" id="addrDetail" name="addrDetail" type="text" placeholder="상세주소 입력">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>회원탈퇴</th>
+                            <td>
+                                <button onclick="deleteUser()" class="deleteUserBtn" type="button">탈퇴하기</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="inp-btn-box">
+                    <input onclick="prevFunction()" class="x-btn" type="button" value="취소">
+                    <input class="submit-btn" type="button" onclick="updateUser()" value="회원수정">
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer th:replace="layout/footer.html"></footer>
+</div>
+
+<script>
+    document.getElementById('userNick').addEventListener('keydown',()=>{
+        document.getElementById('error-nick').style.display = "none"
+        document.getElementById('success-nick').style.display = "none"
+    })
+    document.getElementById('userEmail').addEventListener('keydown',()=>{
+        document.getElementById('error-email').style.display = "none"
+        document.getElementById('success-email').style.display = "none"
+    })
+    document.getElementById('emailCode').addEventListener('keydown',()=>{
+        document.getElementById('error-verify').style.display = "none"
+        document.getElementById('error-verify').style.display = "none"
+    })
+    document.getElementById('userName').addEventListener('keydown',()=>{
+        document.getElementById('error-name').style.display = "none"
+        document.getElementById('error-name').style.display = "none"
+    })
+    document.getElementById('userHp').addEventListener('keydown',()=>{
+        document.getElementById('error-hp').style.display = "none"
+        document.getElementById('error-hp').style.display = "none"
+    })
+</script>
+<script>
+    let confirmValue = false;
+    let pwdValue = false;
+    let confirmValue2 = false;
+    let pwdValue2 = false;
+    let emailValue = false;
+    let nickValue = false;
+    let nameValue = false;
+    let hpValue = false;
+
+    async function checkNick(){
+        const userNick = document.getElementById('userNick').value;
+        const specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/g;
+        if (specialCharPattern.test(userNick)) {
+            document.getElementById('error-nick').textContent = "별명에 특수문자를 포함할 수 없습니다.";
+            document.getElementById('error-nick').style.display = "block";
+            return;
+        }
+        try {
+            const resp = await axios.get("/api/auth/check/nick",{
+                params : {
+                    "userNick" : document.getElementById('userNick').value
+                },
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+
+            if(resp.data==="DBN"){
+                document.getElementById('error-nick').textContent = '중복된 닉네임 입니다.'
+                document.getElementById('error-nick').style.display = "block"
+                nickValue = false;
+            } else if (resp.data === "SU"){
+                document.getElementById('success-nick').textContent = '사용가능한 닉네임 입니다.'
+                document.getElementById('success-nick').style.display = "block"
+                nickValue = true;
+            } else if(resp.data==="EUN"){
+                document.getElementById('error-nick').textContent = '공백은 허용되지 않습니다.'
+                document.getElementById('error-nick').style.display = "block"
+                nickValue = false;
+            } else if(resp.data === "EW"){
+                document.getElementById('error-nick').textContent = '사이의 공백은 허용되지 않습니다.'
+                document.getElementById('error-nick').style.display = "block"
+                nickValue = false;
+            }
+        } catch (e) {
+
+        }
+    }
+
+    async function checkEmail(){
+        emailValue = false;
+
+        const email = document.getElementById('userEmail').value;
+        const emailPattern = /^(?=.{1,256}$)(?=.{1,64}@.{1,255}$)(?!.*\.\.)(?!.*\.$)(?!.*\.-)(?!.*-\.)(?!.*\..-)(?!.*\.-)(?!.*\.$)(?!.*\.@)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i;
+
+
+        // 이메일이 비어 있는지 확인
+        if (!email) {
+            document.getElementById('error-email').textContent = "이메일을 입력하세요.";
+            document.getElementById('error-email').style.display = "block";
+            emailValue = false;
+            return;
+        }
+
+        // 이메일 형식이 올바른지 확인
+        if (!emailPattern.test(email)) {
+            document.getElementById('error-email').textContent = "유효하지 않은 이메일 형식입니다.";
+            document.getElementById('error-email').style.display = "block";
+            emailValue = false;
+            return;
+        }
+
+        try {
+            const resp = await axios.get("/api/auth/send/email",{
+                params : {
+                    "userEmail" : email
+                },
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            if(resp.data.result==="DBE"){
+                document.getElementById('error-email').textContent = "중복된 이메일 입니다.";
+                document.getElementById('error-email').style.display = "block";
+                emailValue = false;
+            } else {
+                document.getElementById('success-email').style.display = "block";
+                handleEmailResponse(resp.data)
+                recieveCode = resp.data.result
+                startTimer(180 * 1000);
+                emailValue = true;
+            }
+        } catch (e) {
+
+        }
+    }
+    let expiryTime;
+    let timerInterval;
+
+    function startTimer(duration) {
+        const endTime = Date.now() + duration;
+        expiryTime = endTime;
+
+        function updateTimer() {
+            const now = Date.now();
+            const timeLeft = endTime - now;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.querySelector('#success-email button').disabled = true;
+                document.querySelector('#timer').textContent = '00:00';
+                return;
+            }
+
+            const minutes = Math.floor(timeLeft / 60000);
+            const seconds = Math.floor((timeLeft % 60000) / 1000);
+            document.querySelector('#timer').textContent =
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+            timerInterval = setTimeout(updateTimer, 1000); // 1초마다 업데이트
+        }
+
+        updateTimer();
+    }
+
+    function handleEmailResponse(response) {
+        const expiryTime = response.expiryTime;
+        const currentTime = Date.now();
+        const timeLeft = expiryTime - currentTime;
+
+        // 인증 코드 입력 DIV 표시
+        document.getElementById("success-email").style.display = 'block';
+
+        // 인증 버튼 비활성화 및 타이머 설정
+        const verifyButton = document.querySelector('#success-email button');
+        verifyButton.disabled = false;
+
+        // 타이머를 사용하여 버튼 비활성화
+        setTimeout(() => {
+            verifyButton.disabled = true;
+        }, timeLeft);
+    }
+
+    let recieveCode = 0;
+    let verifyValue = false;
+    function verifyCode(){
+        const sendCode = document.getElementById('emailCode').value
+        console.log(recieveCode)
+        if(recieveCode===sendCode){
+            document.getElementById('verifyBtn').innerText = '인증완료'
+            document.getElementById('verifyBtn').disabled = true;
+            document.getElementById('timer').style.display = 'none'
+            document.getElementById('userEmail').readOnly = true;
+            verifyValue = true;
+        } else {
+            document.getElementById('error-verify').textContent = '잘못된 인증코드 입니다.'
+            document.getElementById('error-verify').style.display = 'block'
+        }
+    }
+
+
+    const password = document.getElementById('checkPwd')
+    password.addEventListener('change',()=>{
+        const password = document.getElementById('checkPwd').value;
+        const errorMsg = document.getElementById('error-pwd');
+        const successMsg = document.getElementById('success-pwd');
+        const modifyBtn = document.getElementById('verifyBtn3')
+
+        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        if (!passwordPattern.test(password)) {
+            errorMsg.textContent = "비밀번호는 8자리 이상, 영어, 숫자, 특수문자(@$!%*?&)를 포함해야 합니다.";
+            errorMsg.style.display = 'block';
+            pwdValue=false;
+            if(!confirmValue||!pwdValue){
+                document.getElementById('verifyBtn2').disabled = true;
+            }
+            if(modifyBtn.style.display==='inline'){
+                successMsg.style.display = 'none';
+                pwdValue2 = false;
+                if(!confirmValue2||!pwdValue2){
+                    document.getElementById('verifyBtn2').disabled = true;
+                }
+            }
+
+            return false;
+        } else {
+            errorMsg.style.display = 'none';
+            pwdValue = true;
+            if(confirmValue&&pwdValue){
+                document.getElementById('verifyBtn2').disabled = false;
+            }
+            if(modifyBtn.style.display==='inline'){
+                successMsg.textContent = "사용가능한 비밀번호 입니다."
+                successMsg.style.display = 'block'
+                pwdValue2=true;
+                if(confirmValue2&&pwdValue2){
+                    document.getElementById('verifyBtn2').disabled = false;
+                }
+            }
+        }
+    })
+
+    const confirm = document.getElementById('checkConfirm')
+    confirm.addEventListener('change',()=>{
+        const modifyBtn = document.getElementById('verifyBtn3')
+        const password = document.getElementById('checkPwd').value;
+        const confirmPassword = document.getElementById('checkConfirm').value;
+        const errorMsg = document.getElementById('error-confirm');
+        const successMsg = document.getElementById('success-confirm')
+        if (password !== confirmPassword) {
+            errorMsg.textContent = "비밀번호와 비밀번호 확인이 일치하지 않습니다.";
+            errorMsg.style.display = 'block';
+            successMsg.style.display = 'none';
+            confirmValue = false;
+            if(!confirmValue||!pwdValue){
+                document.getElementById('verifyBtn2').disabled = true;
+            }
+            if(modifyBtn.style.display==='inline'){
+                confirmValue2=false;
+                if(!confirmValue2||!pwdValue2){
+                    document.getElementById('verifyBtn3').disabled = true;
+                }
+            }
+            return false;
+        } else {
+            successMsg.textContent = "비밀번호와 비밀번호 확인이 일치합니다."
+            successMsg.style.display = 'block'
+            errorMsg.style.display = 'none';
+            confirmValue = true;
+            if(confirmValue&&pwdValue){
+                document.getElementById('verifyBtn2').disabled = false;
+            }
+            if(modifyBtn.style.display==='inline'){
+                confirmValue2=true;
+                if(confirmValue2&&pwdValue2){
+                    document.getElementById('verifyBtn3').disabled = false;
+                }
+            }
+        }
+
+    })
+    async function checkPwdBtn(){
+        submitData = {
+            "pwd" : document.getElementById('checkPwd').value
+        }
+        try {
+            const resp = await axios.post("/api/auth/check/pwd",submitData,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            console.log(resp.data)
+            if(resp.data==="SU"){
+                alert('인증되었습니다.')
+                document.querySelector('.my-info').style.display = 'block'
+                document.querySelector('.my-info2').style.display = 'block'
+                document.getElementById('verifyBtn2').style.display = 'none'
+                document.getElementById('verifyBtn3').style.display = 'inline'
+                document.getElementById('checkPwd').value = ''
+                document.getElementById('checkConfirm').value = ''
+                document.getElementById('success-confirm').style.display = 'none';
+            } else {
+                alert('비밀번호가 일치하지 않습니다.')
+                document.querySelector('.my-info').style.display = 'none'
+            }
+        } catch (e) {
+
+        }
+
+    }
+    async function modifyPwd(){
+        submitData = {
+            "pwd" : document.getElementById('checkPwd').value
+        }
+        try {
+            const resp = await axios.put("/api/auth/pwd",submitData,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            if(resp.data==="SU"){
+                window.location.href = "/mypage/user?section=mypage&type=user"
+            } else {
+                document.getElementById('error-pwd').innerText = '동일한 비밀번호로는 변경할 수 없습니다.'
+                document.getElementById('error-pwd').style.display = 'block'
+                document.getElementById('success-pwd').style.display = 'none'
+            }
+        } catch (e) {
+
+        }
+    }
+
+    document.getElementById('userName').addEventListener('keydown',()=>{
+        if(document.getElementById('userName').value.trim !== '' && !document.getElementById('userName').value.includes(' ')){
+            nameValue = true;
+        } else {
+            document.getElementById('error-name').textContent = '사이의 공백은 허용하지않습니다.'
+            document.getElementById('error-name').style.display = 'block'
+            nameValue = false;
+        }
+    })
+    document.getElementById('userHp').addEventListener('keydown',()=>{
+        if(document.getElementById('userHp').value.trim !== '' && !document.getElementById('userHp').value.includes(' ') ){
+            hpValue = true;
+        } else {
+            document.getElementById('error-hp').textContent = '사이의 공백은 허용하지않습니다.'
+            document.getElementById('error-hp').style.display = 'block'
+            hpValue = false;
+        }
+    })
+</script>
+<script>
+    async function updateUser(){
+        console.log("진입")
+        submitData = {
+
+        };
+        if(verifyValue){
+            submitData["userEmail"] = document.getElementById('userEmail').value;
+        }
+        if(nickValue){
+            submitData["userNick"] = document.getElementById("userNick").value;
+        } else {
+            delete submitData["userNick"];
+        }
+        if(addressValue){
+            submitData["addrZone"] = document.getElementById('postcode').value;
+            submitData["addr"] = document.getElementById('address').value;
+            submitData["addrDetail"] = document.getElementById('addrDetail').value;
+        }
+        if(nameValue){
+            submitData["userName"] = document.getElementById("userName").value;
+        } else {
+            delete submitData["userName"];
+        }
+        if(hpValue){
+            submitData["userHp"] = document.getElementById("userHp").value;
+        } else {
+            delete submitData["userHp"];
+        }
+
+        try {
+            console.log(submitData)
+            const resp = await axios.put("/api/client/user",submitData,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            if(resp.data==="SU"){
+                window.location.href = "/mypage/user?section=mypage&type=user"
+            }
+
+        } catch (e) {
+
+        }
+
+    }
+
+    async function deleteUser(){
+        try {
+            const resp = await axios.delete("/api/client/user",{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            if(resp.data==="SU"){
+                window.location.href = "/"
+            }
+        } catch (e) {
+
+        }
+    }
+</script>
+<script>
+    function execDaumPostcode() {
+        event.preventDefault();
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 우편번호와 주소 정보를 해당 입력 필드에 채워줍니다.
+                document.getElementById('postcode').value = data.zonecode; // 우편번호
+                document.getElementById('address').value = data.roadAddress; // 도로명 주소
+
+                // 사용자가 선택한 주소에 추가 정보가 있다면 추가
+                var extraAddr = '';
+                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                    extraAddr += data.bname;
+                }
+                if (data.buildingName !== '' && data.apartment === 'Y') {
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                if (extraAddr !== '') {
+                    document.getElementById('address').value += ' (' + extraAddr + ')';
+                }
+
+                // 우편번호 찾기 화면이 닫힙니다.
+                addressValue=true
+                document.getElementById('postcode').readOnly = true;
+                document.getElementById('address').readOnly = true;
+                document.getElementById('postcode').focus();
+            }
+        }).open();
+    }
+</script>
+</body>
+</html>

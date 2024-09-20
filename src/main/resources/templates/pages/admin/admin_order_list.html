@@ -1,0 +1,92 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="script">
+    <script src="/js/axios.min.js"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/admin_order_list.css}">
+    <title>주문목록(관리자)</title>
+</head>
+<body>
+<div class="container">
+    <header th:replace="layout/ad_header.html"></header>
+    <main>
+        <aside th:replace="layout/ad_sidebar.html"></aside>
+        <div class="main-container">
+            <div id="section2_main">
+                <div id="section2_title">주문목록</div>
+                <div id="article_wrapper">
+                    <div id="article1">
+                        <table id="order_table">
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>주문번호</th>
+                                <th>상품명</th>
+                                <th>판매가격</th>
+                                <th>수량</th>
+                                <th>배송비</th>
+                                <th>합계</th>
+                                <th>주문자</th>
+                                <th>주문일</th>
+                                <th>확인</th>
+                            </tr>
+                            <tr th:each="order : ${orders}">
+                                <td><input name="selectedProducts" type="checkbox" th:value="${order.orderIdx}"></td>
+                                <td th:text="${order.orderIdx }"></td>
+                                <td th:text="${order.prodName }"></td>
+                                <td th:text="${order.prodPrice }"></td>
+                                <td th:text="${order.prodQuantity }"></td>
+                                <td th:text="${order.prodDelivery }"></td>
+                                <td th:text="${order.totalPrice }"></td>
+                                <td th:text="${order.userName }"></td>
+                                <td th:text="${order.orderCreateAt }"></td>
+                                <td><a th:id="${order.orderIdx}">[상세확인]</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="prod_heading">
+                        <div onclick="deleteOrder()" id="prod_del">선택삭제</div>
+                    </div>
+                    <div id="list_num">
+                        <a th:href="@{/admin/orders(page=0)}" ><<</a>
+                        <a th:href="@{/admin/orders(page=${currentPage - 2})}" th:if="${currentPage>=2}" th:text="${currentPage}-1"></a>
+                        <a th:href="@{/admin/orders(page=${currentPage - 1})}" th:if="${currentPage>=1}" th:text="${currentPage}"></a>
+                        <a th:text="${currentPage}+1"></a>
+                        <a th:href="@{/admin/orders(page=${currentPage + 1})}" th:if="${(totalPage - currentPage)>=2}" th:text="${currentPage}+2"></a>
+                        <a th:href="@{/admin/orders(page=${currentPage + 2})}" th:if="${(totalPage - currentPage)>=3}" th:text="${currentPage}+3"></a>
+                        <a th:href="@{/admin/orders(page=${totalPage.intValue()-1})}" >>></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="layout/ad_footer.html"></footer>
+</div>
+
+<script src="/js/axios.min.js"></script>
+<script>
+    async function deleteOrder(){
+        try {
+            const resp = await axios.delete("/api/admin/order",{
+                params : {
+                    orderIdx : 1
+                },
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            console.log(resp.data)
+            window.location.href = resp.data;
+        } catch (e) {
+
+        }
+
+    }
+</script>
+</body>
+</html>

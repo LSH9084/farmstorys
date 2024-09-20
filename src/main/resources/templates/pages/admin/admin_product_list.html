@@ -1,0 +1,190 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="script">
+    <script src="/js/axios.min.js"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/admin_product_list.css}">
+    <title>상품목록(관리자)</title>
+</head>
+<body>
+
+    <div class="container">
+        <header th:replace="layout/ad_header.html"></header>
+        <main>
+            <aside th:replace="layout/ad_sidebar.html"></aside>
+            <div class="main-container">
+                <div id="section2_main">
+                    <div id="section2_title">상품목록</div>
+                    <div id="article_wrapper">
+                        <div id="article1">
+                            <table id="prod_table">
+                                <tr>
+                                    <th><input id="allCheck" type="checkbox"></th>
+                                    <th>사진</th>
+                                    <th>상품번호</th>
+                                    <th>상품명</th>
+                                    <th>구분</th>
+                                    <th>가격</th>
+                                    <th>재고</th>
+                                    <th>등록일</th>
+                                </tr>
+
+                                    <tr th:each="product, loop : ${products.content}">
+                                        <td>
+                                            <input class="selectedCheck" name="selectedProducts" th:value="${product.prodIdx}" type="checkbox"></td>
+                                        <td>
+                                            <img th:src="@{${product.prodFilePath + product.prodFileName}}"
+                                                 id="sample_img" alt="sample">
+                                        </td>
+                                        <td th:text="${product.prodIdx }"></td>
+                                        <td th:text="${product.prodName }"></td>
+                                        <td th:text="${product.prodType }"></td>
+                                        <td th:text="${product.prodPrice.intValue() }"></td>
+                                        <td th:text="${product.prodStock }"></td>
+                                        <td th:text="${product.prodCreateAt }"></td>
+                                    </tr>
+                            </table>
+                        </div>
+                        <div id="prod_heading">
+                            <div onclick="deleteProduct()" >선택삭제</div>
+                        </div>
+                        <div id="list_num">
+                            <a th:href="@{/admin/products(page=0)}" ><<</a>
+                            <a th:href="@{/admin/products(page=${currentPage - 2})}" th:if="${currentPage>=2}" th:text="${currentPage}-1"></a>
+                            <a th:href="@{/admin/products(page=${currentPage - 1})}" th:if="${currentPage>=1}" th:text="${currentPage}"></a>
+                            <a th:text="${currentPage}+1"></a>
+                            <a th:href="@{/admin/products(page=${currentPage + 1})}" th:if="${(totalPage - currentPage)>=2}" th:text="${currentPage}+2"></a>
+                            <a th:href="@{/admin/products(page=${currentPage + 2})}" th:if="${(totalPage - currentPage)>=3}" th:text="${currentPage}+3"></a>
+                            <a th:href="@{/admin/products(page=${totalPage.intValue()-1})}" >>></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="layout/ad_footer.html"></footer>
+    </div>
+    <script src="/js/axios.min.js"></script>
+
+    <script>
+        // const deleteProdIdx = document.querySelectorAll('#selectedCheck');
+        //
+        // const submitData = [];
+        //
+        // deleteProdIdx.forEach((v)=>{
+        //     v.addEventListener('change',(e)=>{
+        //         if(e.target.checked){
+        //             submitData.push(e.target.value);
+        //         } else {
+        //             // 체크 해제 시 배열에서 제거
+        //             const index = submitData.indexOf(e.target.value);
+        //             if (index > -1) {
+        //                 submitData.splice(index, 1);
+        //             }
+        //         }
+        //     })
+        // })
+        const deleteCartIdx = document.querySelectorAll('.selectedCheck');
+        const selectAllCheckbox = document.getElementById('allCheck');
+        const submitData = [];
+
+        // 개별 체크박스의 상태를 처리
+        deleteCartIdx.forEach((checkbox) => {
+            checkbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    submitData.push(e.target.value);
+                } else {
+                    const index = submitData.indexOf(e.target.value);
+                    if (index > -1) {
+                        submitData.splice(index, 1);
+                    }
+                }
+                // 전체 체크박스 상태를 업데이트
+                updateSelectAllCheckboxState();
+            });
+        });
+
+        // 전체 체크박스 버튼 상태를 처리
+        selectAllCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            deleteCartIdx.forEach((checkbox) => {
+                checkbox.checked = isChecked;
+                if (isChecked) {
+                    submitData.push(checkbox.value);
+                } else {
+                    const index = submitData.indexOf(e.target.value);
+                    if (index > -1) {
+                        submitData.splice(index, 1);
+                    }
+                }
+            });
+        });
+
+        // 전체 체크박스의 상태를 업데이트하는 함수
+        function updateSelectAllCheckboxState() {
+            const allChecked = Array.from(deleteCartIdx).every(checkbox => checkbox.checked);
+            const noneChecked = Array.from(deleteCartIdx).every(checkbox => !checkbox.checked);
+            selectAllCheckbox.checked = allChecked;
+            selectAllCheckbox.indeterminate = !allChecked && !noneChecked; // 일부만 선택된 상태를 나타내기 위한 설정
+        }
+
+
+        async function deleteProduct(){
+            console.log(submitData)
+
+            try {
+                const resp = await axios.delete('/api/admin/product',{
+                    headers : {
+                        "Content-Type" : "application/json"
+                    },
+                    data : {
+                        "prodIdx" : submitData
+                    }
+                })
+                if(resp.status===200){
+                    window.location.href = resp.data;
+                } else {
+                    alert('삭제 실패하였습니다.')
+                }
+
+            } catch (e) {
+
+            }
+        }
+    </script>
+    <script>
+        // const allCheck = document.getElementById('allCheck')
+        // const selectedCheck = document.querySelectorAll('#selectedCheck')
+        // let cnt = 0;
+        // allCheck.addEventListener('change',(e)=>{
+        //     selectedCheck.forEach(v => {
+        //         v.checked = e.target.checked;
+        //         cnt = selectedCheck.length;
+        //         console.log(cnt)
+        //     })
+        // })
+        //
+        // selectedCheck.forEach(v=>{
+        //     v.addEventListener('change',(e)=>{
+        //         if(e.target.checked){
+        //             cnt++;
+        //             console.log(cnt)
+        //         } else {
+        //             cnt--;
+        //             console.log(cnt)
+        //         }
+        //         if(cnt===selectedCheck.length){
+        //             allCheck.checked = true;
+        //         } else if(cnt<selectedCheck.length) {
+        //             allCheck.checked = false;
+        //         }
+        //     })
+        // })
+    </script>
+</body>
+</html>

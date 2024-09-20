@@ -1,0 +1,407 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>일정 이벤트</title>
+    <link rel="stylesheet" th:href="@{/css/event_calendar.css}">
+    <script th:inline="javascript">
+        /* 서버에서 전달된 스케줄 데이터를 JSON 형태로 변환하여 JavaScript 변수로 전달 */
+        var schedules = /*[[${schedules}]]*/ [];
+        var adminSchedules = /*[[${adminSchedules}]]*/ [];
+    </script>
+</head>
+<body>
+<div class="container">
+    <header th:replace="layout/header.html"></header>
+    <main>
+        <aside th:replace="layout/sidebar.html"></aside>
+        <div class="detail-schedule-box slide2">
+            <nav>
+                <img th:src="@{/images/sub_nav_tit_cate4_tit1.png}" alt="이벤트"/>
+                <p>
+                    HOME > 이벤트 > <em>이벤트</em>
+                </p>
+            </nav>
+            <div><img class="header-gubun" th:src="@{/images/head_menu_line.png}"></div>
+            <div class="schedule-calendar-box">
+                <div class="calendar-header-box">
+                    <h1 class="header-month" id="month"></h1>
+                    <div class="seperate-box">
+                        <div th:if="${admin=='false'}" onclick="todayEvent(event)" id="today" class="today-btn">Today</div>
+                        <div th:if="${admin=='true'}" onclick="adminTodayEvent(event)" id="adminToday" class="today-btn">Today</div>
+                        <div th:if="${admin=='true'}" onclick="setEventDay(event)" id="todayEvent" class="today-btn">Event</div>
+                        <div class="header-btn">
+                            <button class="header-prev" id="prev"><</button>
+                            <button class="header-next" id="next">></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="calendar-days">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>The</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                <div class="calendar-dates" id="dates"></div>
+            </div>
+
+            <!-- 일정 입력 모달 -->
+            <div class="modal-box modal-hidden">
+                <div id="modal-content-box">
+                    <span id="close">&times;</span>
+                    <h2 id="modal-date"></h2>
+                    <div class="modal-content">
+                        <input class="schedule-text" type="text" placeholder="일정">
+
+                        <!-- 글자색 선택 라디오 버튼 -->
+                        <h4>글자색 선택 (RGB)</h4>
+                        <label for="text-red">Red:</label>
+                        <input type="range" id="text-red" name="text-red" min="0" max="255" value="0">
+                        <label for="text-green">Green:</label>
+                        <input type="range" id="text-green" name="text-green" min="0" max="255" value="0">
+                        <label for="text-blue">Blue:</label>
+                        <input type="range" id="text-blue" name="text-blue" min="0" max="255" value="0">
+
+                        <!-- 배경색 선택 라디오 버튼 -->
+                        <h4>배경색 선택 (RGB)</h4>
+                        <label for="bg-red">Red:</label>
+                        <input type="range" id="bg-red" name="bg-red" min="0" max="255" value="255">
+                        <label for="bg-green">Green:</label>
+                        <input type="range" id="bg-green" name="bg-green" min="0" max="255" value="255">
+                        <label for="bg-blue">Blue:</label>
+                        <input type="range" id="bg-blue" name="bg-blue" min="0" max="255" value="255">
+                    </div>
+                    <div id="preview-color">미리보기</div>
+                    <div th:if="${admin=='false'}" class="button-separate">
+                        <button onclick="postEvent()" class="add-event" id="add-event">추가</button>
+                        <button onclick="deleteEvent()" class="delete-event" id="delete-event">일정 삭제</button>
+                    </div>
+                    <div th:if="${admin=='true'}" class="button-separate">
+                        <button onclick="postAdminEvent()" class="add-event" id="add-admin-event">추가</button>
+                        <button onclick="postEventDay()" class="add-event" id="add-admin-event-day">이벤트</button>
+                        <button onclick="deleteAdminEvent()" class="delete-event" id="delete-admin-event">일정 삭제</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer th:replace="layout/footer.html"></footer>
+</div>
+<script>
+    const calendar = document.getElementById('calendar');
+    const monthElement = document.getElementById('month');
+    const datesElement = document.getElementById('dates');
+    const prevButton = document.getElementById('prev');
+    const nextButton = document.getElementById('next');
+    const modal = document.querySelector('.modal-box');
+    const modalDate = document.getElementById('modal-date');
+    const eventInput = document.getElementById('event-input');
+    const addEventButton = document.getElementById('add-event');
+    const closeModal = document.getElementById('close');
+
+
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+    let currentDate = new Date().getDate();
+    let currentDay = new Date().getDay();
+
+    const convertMonth = {
+        1: "January",
+        2: "February",
+        3: "March",
+        4: "April",
+        5: "May",
+        6: "June",
+        7: "July",
+        8: "August",
+        9: "September",
+        10: "October",
+        11: "November",
+        12: "December"
+    };
+
+    function generateCalendar(month, year) {
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        monthElement.textContent = `${convertMonth[month+1]} ${year}`;
+        datesElement.innerHTML = '';
+
+        for (let i = 0; i < firstDay; i++) {
+            const emptyDiv = document.createElement('div');
+            datesElement.appendChild(emptyDiv);
+        }
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateDiv = document.createElement('div');
+            dateDiv.textContent = day;
+
+            adminSchedules.map((v)=>{
+                if(v.date===day&&v.month===(month+1)&&v.year===year){
+                    const scheduleDay = document.createElement('p');
+                    scheduleDay.style.color = `${v.color}`
+                    scheduleDay.innerHTML=`${v.text}`
+                    scheduleDay.style.backgroundColor = `${v.bgcolor}`
+                    dateDiv.appendChild(scheduleDay)
+                }
+            })
+
+            schedules.map((v)=>{
+                if(v.date===day&&v.month===(month+1)&&v.year===year){
+                    const scheduleDay = document.createElement('p');
+                    scheduleDay.style.color = `${v.color}`
+                    scheduleDay.innerHTML=`${v.text}`
+                    dateDiv.style.backgroundColor = `${v.bgcolor}`
+                    dateDiv.appendChild(scheduleDay)
+                }
+            })
+
+            dateDiv.addEventListener('click', () => openModal(day, month, year));
+            datesElement.appendChild(dateDiv);
+            const day2 = new Date(year,month,day).getDay();
+            if(day2===6){
+                dateDiv.style.color = 'red'
+            } else if(day2===0){
+                dateDiv.style.color = 'red'
+            } else if(currentDate === day && 8 === month && 2024 === year){
+                dateDiv.style.backgroundColor = '#fffadf'
+                // todayEvent
+                if(document.getElementById('adminToday')){
+                    document.getElementById('adminToday').dataset.day = day;
+                    document.getElementById('adminToday').dataset.month = month;
+                    document.getElementById('adminToday').dataset.year = year;
+                    document.getElementById('todayEvent').dataset.day = day;
+                    document.getElementById('todayEvent').dataset.month = month;
+                    document.getElementById('todayEvent').dataset.year = year;
+                } else {
+                    document.getElementById('today').dataset.day = day;
+                    document.getElementById('today').dataset.month = month;
+                    document.getElementById('today').dataset.year = year;
+                }
+            }
+
+        }
+    }
+    let submitData = {}
+
+    function openModal(day, month, year) {
+        modal.classList.remove('modal-hidden');
+        modalDate.textContent = `${year}년 ${month + 1}월 ${day}일`;
+        modalDate.style.fontSize = "20px";
+        modalDate.style.marginBottom = "20px";
+        // eventInput.value = '';
+
+        submitData = {
+            year: year,
+            month: month+1,
+            date: day,
+            color: `black`,
+            text: '',
+            bgcolor: `white`
+        };
+
+        deleteData = {
+            year : year,
+            month : month+1,
+            date : day
+        }
+
+        const textRed = document.getElementById("text-red");
+        const textGreen = document.getElementById("text-green");
+        const textBlue = document.getElementById("text-blue");
+
+        const bgRed = document.getElementById("bg-red");
+        const bgGreen = document.getElementById("bg-green");
+        const bgBlue = document.getElementById("bg-blue");
+
+        const modalBox = document.getElementById("preview-color");
+
+        updateTextColor();
+        updateBackgroundColor();
+
+        function updateTextColor() {
+            const schedulecolor = `rgb(${textRed.value}, ${textGreen.value}, ${textBlue.value})`;
+            modalBox.style.color = schedulecolor;
+            submitData.color = schedulecolor;
+        }
+
+        function updateBackgroundColor() {
+            const schedulbgcolor = `rgb(${bgRed.value}, ${bgGreen.value}, ${bgBlue.value})`;
+            modalBox.style.backgroundColor = schedulbgcolor;
+            submitData.bgcolor = schedulbgcolor;
+        }
+
+        textRed.addEventListener("change", updateTextColor);
+        textGreen.addEventListener("change", updateTextColor);
+        textBlue.addEventListener("change", updateTextColor);
+
+        bgRed.addEventListener("change", updateBackgroundColor);
+        bgGreen.addEventListener("change", updateBackgroundColor);
+        bgBlue.addEventListener("change", updateBackgroundColor);
+
+
+
+
+    }
+    async function postEvent(){
+        submitData.text = document.querySelector('.schedule-text').value;
+
+        try {
+            const resp = await axios.post("/api/event/schedule",submitData,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            window.location.href = resp.data;
+
+        } catch (e) {
+
+        }
+    }
+
+    async function postAdminEvent(){
+        submitData.text = document.querySelector('.schedule-text').value;
+
+        try {
+            const resp = await axios.post("/api/event/admin",submitData,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            window.location.href = resp.data;
+        } catch (e) {
+
+        }
+    }
+
+    async function deleteEvent(){
+        try {
+            const resp = await axios.delete("/api/event/schedule",{
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                params : deleteData
+            })
+            if(resp.data==="SU"){
+                alert('일정 삭제!')
+                window.location.href ="/client/event?section=event&type=schedule";
+            } else {
+                alert('해당 날짜에 일정이 없습니다.')
+            }
+        } catch (e) {
+
+        }
+    }
+
+    async function deleteAdminEvent(){
+        try {
+            const resp = await axios.delete("/api/event/admin",{
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                params : deleteData
+            })
+            if(resp.data==="SU"){
+                alert('일정 삭제!')
+                window.location.href ="/client/event?section=event&type=schedule";
+            } else {
+                alert('해당 날짜에 일정이 없습니다.')
+            }
+        } catch (e) {
+
+        }
+    }
+
+    function todayEvent(event){
+        openModal(event.target.dataset.day,parseInt(event.target.dataset.month),event.target.dataset.year)
+    }
+
+    function adminTodayEvent(event){
+        openModal(event.target.dataset.day,parseInt(event.target.dataset.month),event.target.dataset.year)
+    }
+
+    async function setEventDay(event){
+        const eventData = {
+            "date" : event.target.dataset.day,
+            "month" : parseInt(event.target.dataset.month)+1,
+            "year" : event.target.dataset.year,
+            "text" : "30% 초특가 Event",
+            "color" : "rgb(255, 0, 0)",
+            "bgcolor" : "rgb(255, 255, 0)"
+        }
+
+        try {
+            const resp = await axios.post("/api/event/admin",eventData,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            window.location.href = resp.data;
+        } catch (e) {
+
+        }
+    }
+
+    async function postEventDay(){
+        submitData.text = "30% 초특가 Event";
+        submitData.color = "rgb(255, 0, 0)";
+        submitData.bgcolor = "rgb(255, 255, 0)";
+        console.log(submitData)
+
+        try {
+            const resp = await axios.post("/api/event/admin",submitData,{
+                headers : {
+                    "Content-Type" : "application/json"
+                }
+            })
+            window.location.href = resp.data;
+        } catch (e) {
+
+        }
+    }
+
+
+    function closeModalModal() {
+        modal.classList.add('modal-hidden');
+
+    }
+
+    prevButton.addEventListener('click', () => {
+        if (currentMonth === 0) {
+            currentMonth = 11;
+            currentYear--;
+        } else {
+            currentMonth--;
+        }
+        generateCalendar(currentMonth, currentYear);
+    });
+
+    nextButton.addEventListener('click', () => {
+        if (currentMonth === 11) {
+            currentMonth = 0;
+            currentYear++;
+        } else {
+            currentMonth++;
+        }
+        generateCalendar(currentMonth, currentYear);
+    });
+
+    closeModal.addEventListener('click', closeModalModal);
+
+    generateCalendar(currentMonth, currentYear);
+</script>
+<script>
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="script">
+    <script src="/js/axios.min.js"></script>
+</th:block>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/product_view.css}">
+    <link rel="stylesheet" th:href="@{/css/order_direct.css}">
+    <title>상품 상세보기</title>
+</head>
+<body>
+    <div class="container">
+        <header th:replace="/layout/header.html"></header>
+        <main>
+            <aside th:replace="/layout/sidebar.html"></aside>
+            <div class="view">
+                <nav>
+                    <img src="../images/sub_nav_tit_cate2_tit1.png" alt="장보기"/>
+                    <p>
+                        HOME > 장보기 > <em>장보기</em>
+                    </p>
+                </nav>
+                <div><img class="header-gubun" th:src="@{/images/head_menu_line.png}"></div>
+                <!-- 내용 시작 -->
+                <h3>기본정보</h3>
+                <div  class="basic">
+                    <img th:each="file : ${product.files}" th:if="${file.type == 'basic'}" th:src="@{${file.path + file.filename}}" />
+                    <table border="0">
+                        <tr>
+                            <td>상품명</td>
+                            <td th:text="${product.prodName}"></td>
+                        </tr>
+                        <tr>
+                            <td>상품코드</td>
+                            <td class="prIdx" th:text="${product.prodIdx}"></td>
+                        </tr>
+                        <tr>
+                            <td>배송비</td>
+                            <td>
+                                <span th:text="${product.prodDelivery.intValue()}"></span>원
+                                <em>3만원 이상 무료배송</em>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>판매가격</td>
+                            <td class="prodPrice" th:text="${product.prodPrice.intValue()}+원"></td>
+                        </tr>
+                        <tr>
+                            <td>구매수량</td>
+                            <td>
+                                <input class="quant" type="number" name="count" min="1" value="1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>합계</td>
+                            <td th:text="${product.prodPrice.intValue()}+원" th:name="totalPrice" class="totalPrice"></td>
+                        </tr>
+                        <a href="#" onclick="getOrderDirect(event)" class="btnOrder">
+                            <img src="../images/market_btn_order.gif" alt="바로 구매하기"/>
+                        </a>
+                        <a href="#" onclick="postCart(event)" class="btnCart">
+                            장바구니 >
+                        </a>
+
+
+                    </table>
+                </div>
+                <h3>상품설명</h3>
+                <div class="detail">
+                    <img th:each="file : ${product.files}" th:if="${file.type == 'description'}" th:src="@{${file.path + file.filename}}" />
+
+                </div>
+
+                <h3>배송정보</h3>
+                <div class="delivery">
+                    <p>
+                        입금하신 이후 택배송장번호는 SMS(문자서비스)를 통해 고객님께 안내해드립니다.
+                    </p>
+                </div>
+
+                <h3>교환/반품</h3>
+                <div class="exchange">
+                    <table border="0">
+                        <tr>
+                            <td>교환 반품이 가능한 경우</td>
+                            <td>
+                                <ul>
+                                    <li>팜스토리 상품에 하자가 있거나 불량인 경우</li>
+                                    <li>채소, 과일, 양곡등의 식품은 만1일 이내</li>
+                                    <li>기타 상품은 수령일로부터 영업일 기준 일주일 이내</li>
+                                    <li>받으신 상품이 표시사항과 다른 경우에는 받으신 날로부터 일주일 이내</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>교환 반품이 불가능한 경우</td>
+                            <td>
+                                <ul>
+                                    <li>신선 식품의 경우 단순히 마음에 들지 않는 경우</li>
+                                    <li>단순 변심으로 상품이 가치가 훼손돼서 판매가 어려운 경우</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </main>
+        <footer th:replace="/layout/footer.html"></footer>
+    </div>
+
+    <script>
+
+        async function postCart(event){
+            event.preventDefault();
+            const submitData = {
+                "prodIdx" : document.querySelector('.prIdx').innerText,
+                "cartItemQuantity" : document.querySelector('.quant').value
+            }
+            try {
+                const resp = await axios.post("/api/client/cart", submitData, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                // 응답 데이터 처리
+                if (resp.status === 200) {
+                    console.log(resp.data)
+                    window.location.href = ""+resp.data;
+                }
+            } catch (error) {
+                // 오류를 처리할 코드
+                console.error('Error:', error);
+            }
+        }
+
+        function getOrderDirect(event){
+            event.preventDefault();
+            const submitData = {
+                "prodIdx" : document.querySelector('.prIdx').innerText,
+                "orderItemQuantity" : document.querySelector('.quant').value
+            }
+
+            const prodIdx = document.querySelector('.prIdx').innerText;
+            const quantity = document.querySelector('.quant').value;
+
+            let url = "/client/order/direct?prodIdx=" + prodIdx + "&&quantity=" +quantity;
+            window.location.href = url;
+        }
+
+    </script>
+    <script>
+
+        let totalPrice = document.querySelector('.totalPrice');
+        const prodPrice = document.querySelector('.prodPrice');
+        const quant = document.querySelector('.quant')
+        console.log(prodPrice.innerText.substring(0,3))
+        quant.addEventListener('change',(e)=>{
+                let value = e.target.value;
+                let totPrice = prodPrice.innerText.substring(0,prodPrice.innerText.length-1)
+                totalPrice.innerText = value*totPrice+'원';
+            })
+    </script>
+</body>
+</html>

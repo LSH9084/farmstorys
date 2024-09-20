@@ -1,0 +1,242 @@
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+    gap: 20px;
+}
+
+.agree-box {
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+    /*display: none;*/
+}
+
+.agree-box .tb_create {
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+    border-collapse: collapse;
+}
+
+.agree-box .tb_create td {
+    border: 1px solid black;
+    position: relative;
+    padding : 7px
+}
+
+.agree-box .tb_create input[type="checkbox"] {
+    position: absolute;
+    bottom: 14px;
+    right: 76px;
+}
+
+.agree-box #agree_privacy1{
+    right: 76px;
+}
+
+.agree-box .tb_create label {
+    position: absolute;
+    bottom: 13px;
+    right: 5px; /* 체크박스와 겹치지 않도록 조정 */
+    cursor: pointer;
+}
+
+/*하단 버튼 부분*/
+.agree-box .button-container {
+    display: flex;
+    justify-content: right;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.agree-box .button-container input:hover {
+    opacity: 0.6;
+}
+
+.agree-box .button-container input[type="button"] {
+    padding: 10px 20px;
+    border: 2px solid #d6d6d6;
+    background-color: white;
+    cursor: pointer;
+}
+
+.tb_create textarea{
+    margin-bottom: 25px;
+    border: 1px solid #e4eaec;
+    background-color: #f7f7f7;
+    resize: none;
+}
+
+.inp-box {
+    padding: 20px;
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+    display: none;
+}
+
+.h2 {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+}
+
+.h2top{
+    margin-top: 20px;
+}
+
+.inp-box .tb_site {
+    border: 1px solid black;
+    width: 100%;
+    box-sizing: border-box;
+    border-collapse: collapse;
+}
+
+.inp-box .tb_info {
+    border: 1px solid black;
+    width: 100%;
+    box-sizing: border-box;
+    border-collapse: collapse;
+}
+
+.inp-box tr {
+    margin: 0;
+    border: 2px solid #e9e9e9;
+}
+
+.inp-box th {
+    text-align: left;
+    padding-left: 10px;
+    font-weight: 600;
+    width: 100px;
+
+    background-color: #f5f8f9;
+    margin: 0;
+    height: 40px;
+    box-sizing: border-box;
+    border-left: 1px solid black;
+}
+
+.inp-box td {
+    box-sizing: border-box;
+    padding: 5px 0 5px 0;
+    border-right: none;
+}
+
+
+
+.inp-box .inp1{
+    width: 180px;
+    background-color: #f7f7f7;
+    outline: none;
+    margin-left: 15px;
+    height: 25px;
+    border: 1px solid #e4eaec;
+    padding-left: 8px;
+    box-sizing: border-box;
+}
+
+.inp-box .inp2 {
+    width: 330px;
+    background-color: #f7f7f7;
+    outline: none;
+    margin-left: 15px;
+    height: 25px;
+    border: 1px solid #e4eaec;
+    padding-left: 8px;
+    box-sizing: border-box;
+}
+
+.text_nickname{
+    margin-left: 15px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+.addr1 , .addr2 {
+    margin-bottom: 5px;
+}
+
+.inp-btn-box {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.x-btn {
+    width: 40px;
+    height: 40px;
+    background-color: #ffffff;
+    border: 2px solid #d6d6d6;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.x-btn:hover, .submit-btn:hover {
+    opacity: 0.6;
+}
+
+.submit-btn {
+    width: 80px;
+    border: 2px solid #d6d6d6;
+    background-color: #efefef;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.inp-box img {
+    position: relative;
+    top: 4px;
+}
+
+.border-div{
+    border: 1px solid black;
+}
+
+.id-check, .nick-check, .send-email, .find-addr{
+    cursor: pointer;
+}
+
+#error-id, #error-pwd, #error-confirm, #error-nick ,#error-email,#error-verify, #error-name, #error-hp {
+    color : red;
+    margin-left: 15px;
+    margin-top: 5px;
+    font-size: 10px;
+    display: none;
+}
+
+#success-id, #success-pwd, #success-confirm, #success-nick {
+    display: none;
+    margin-left: 15px;
+    margin-top: 5px;
+    font-size: 10px;
+}
+
+#success-email{
+    margin-top: 5px;
+    display: none;
+}
+
+#success-email button {
+    background-color: #2e658a;
+    color: #dee4e8;
+    border: none;
+    border-radius: 2px;
+    box-shadow: -0.8px -0.8px 0.8px #356f95;
+    border-top: 1.2px solid #5093c0;
+    border-left: 1.2px solid #5093c0;
+    font-size: 10px;
+    text-shadow: -0.5px 0.5px 0.5px #6990a9;
+    padding: 2px 5px;
+}

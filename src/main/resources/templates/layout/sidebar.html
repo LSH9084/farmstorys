@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <script th:inline="javascript">
+        var section = /*[[${section}]]*/ 'intro';
+        var type = /*[[${type}]]*/ 'greeting';
+    </script>
+</head>
+<body>
+<script>
+    function createSidebarItems(section, type) {
+        const sidebar = document.getElementById('sidebar-last');
+
+        let items = [];
+
+        if (section === 'intro') {
+            items.push(`<a href="/sidebar?section=intro&type=greeting"><div class="sidebar-item greeting ${type === 'greeting' ? '_ov' : ''}"></div></a>`);
+            items.push(`<a href="/sidebar?section=intro&type=direction"><div class="sidebar-item direction ${type === 'direction' ? '_ov' : ''}"></div></a>`);
+        } else if (section === 'product') {
+            items.push(`<a href="/client/products?section=product&type=all"><div class="sidebar-item product _ov"></div></a>`);
+        } else if (section === 'event') {
+            items.push(`<a href="/client/event?section=event&type=calendar"><div class="sidebar-item event _ov"></div></a>`);
+        } else if (section === 'croptalk') {
+            items.push(`<a href="/client/boards?section=croptalk&type=story"><div class="sidebar-item story ${type === 'story' ? '_ov' : ''}"></div></a>`);
+            items.push(`<a href="/client/boards?section=croptalk&type=grow"><div class="sidebar-item grow ${type === 'grow' ? '_ov' : ''}"></div></a>`);
+            items.push(`<a href="/client/boards?section=croptalk&type=school"><div class="sidebar-item school ${type === 'school' ? '_ov' : ''}"></div></a>`);
+        } else if (section === 'community') {
+            items.push(`<a href="/client/boards?section=community&type=notice"><div class="sidebar-item notice ${type === 'notice' ? '_ov' : ''}"></div></a>`);
+            items.push(`<a href="/client/boards?section=community&type=menu"><div class="sidebar-item menu ${type === 'menu' ? '_ov' : ''}"></div></a>`);
+            items.push(`<a href="/client/boards?section=community&type=chef"><div class="sidebar-item chef ${type === 'chef' ? '_ov' : ''}"></div></a>`);
+            items.push(`<a href="/client/boards?section=community&type=qna"><div class="sidebar-item qna ${type === 'qna' ? '_ov' : ''}"></div></a>`);
+            items.push(`<a href="/client/boards?section=community&type=faq"><div class="sidebar-item faq ${type === 'faq' ? '_ov' : ''}"></div></a>`);
+        }  else if (section === 'mypage'){
+            items.push(`<a href="/mypage/carts?section=mypage&type=cart"><div class="sidebar-item mypage-cart ${type === 'cart' ? '_ov' : ''}"></div></a>`);
+            items.push(`<a href="/mypage/orders?section=mypage&type=order"><div class="sidebar-item mypage-order ${type === 'order' ? '_ov' : ''}"></div></a>`);
+            items.push(`<a href="/mypage/user?section=mypage&type=user"><div class="sidebar-item mypage-user ${type === 'user' ? '_ov' : ''}"></div></a>`);
+            items.push(`<a href="/mypage/point?section=mypage&type=point"><div class="sidebar-item mypage-point ${type === 'point' ? '_ov' : ''}"></div></a>`);
+        }
+        sidebar.innerHTML = items.join('');
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        createSidebarItems(section, type);
+    });
+</script>
+<div class="sidebar-box">
+    <div class="sidebar-logo-box">
+        <div class="sidebar-logo" th:classappend="'sidebar-logo-' + ${section}"></div>
+    </div>
+    <div class="sidebar-bg-box-last" id="sidebar-last"></div>
+</div>
+<div class="sidebar-gubun-box"></div>
+</body>
+</html>

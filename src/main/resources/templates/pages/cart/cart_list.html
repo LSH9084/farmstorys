@@ -1,0 +1,409 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>장바구니</title>
+    <link rel="stylesheet" th:href="@{/css/cart_list.css}">
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+    <script th:inline="javascript">
+        /* Thymeleaf 데이터를 JSON 형식으로 변환 */
+        var cartsData = /*[[${carts}]]*/ '';
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header th:replace="layout/header.html"></header>
+        <main>
+            <aside th:replace="layout/sidebar.html"></aside>
+            <div class="main-container">
+                <article class="article">
+                    <div class="articleIn cf">
+                        <nav>
+                            <h2><img src="../images/sub_nav_tit_cate2_tit1.png" alt="장보기"></h2>
+                            <p class="location">
+                                <img src="../images/sub_page_nav_ico.gif" alt="메뉴">
+                                <span>HOME </span>
+                                <span>나의정보 </span>
+                                <strong>장바구니</strong>
+                            </p><!-- .location -->
+                        </nav>
+                        <div><img class="header-gubun" th:src="@{/images/head_menu_line.png}"></div>
+                        <h3 class="tb_tit">장바구니 전체(10)</h3><!-- .tb_tit -->
+                        <table class="tb1">
+                            <colgroup>
+                                <col style="width: 11%">
+                                <col style="width: 5%">
+                                <col style="width: 10%">
+                                <col style="width: 15%">
+                                <col style="width: 10%">
+                                <col style="width: 10%">
+                                <col style="width: 10%">
+                                <col style="width: 10%">
+                                <col style="width: 10%">
+                            </colgroup>
+                            <tr>
+                                <th><input id="allCheck" class="allcheck checkbox" type="checkbox" /></th>
+                                <th>이미지</th>
+                                <th>종류</th>
+                                <th>상품명</th>
+                                <th>수량</th>
+                                <th>할인</th>
+                                <th>포인트</th>
+                                <th>가격</th>
+                                <th>소계</th>
+                            </tr>
+                            <tr>
+                                <td th:if="${nullItem == 'nullItem'}" colspan="9" class="td_first">장바구니에 상품이 없습니다.</td>
+                            </tr>
+                            <tr th:if="${nullItem != 'nullItem'}"
+                                th:each="cart : ${carts}">
+                                <td><input th:value="${cart.cartItemIdx}" class="check checkbox selectedCheck" type="checkbox" /></td>
+                                <td><img th:src="@{${cart.prodFilePath + cart.prodFileName}}"/></td>
+                                <td th:text="${cart.prodType}" >과일</td>
+                                <td th:text="${cart.prodName}">사과 500g</td>
+                                <td th:text="${cart.cartItemQuantity}">1</td>
+                                <td> <span th:text="${cart.prodDiscount.intValue()}">1</span>%</td>
+                                <td th:text="${cart.prodPoint.intValue()}+p">40p</td>
+                                <td th:text="${cart.prodPrice.intValue()}+원">4,000</td>
+                                <td><strong th:text="${cart.prodTotal.intValue()}">3,600</strong>원</td>
+                            </tr>
+                        </table><!-- .tb1 -->
+                        <button class="btnSD" onclick="deleteCart()">선택삭제</button>
+                        <div th:if="${nullItem != 'nullItem'}" class="order_info_last">
+                            <div class="order_info cf popup">
+                                <h2 class="order_tit"
+                                    style="margin-top: 20px;
+                                           font-size: 1.5em;
+                                           margin-bottom: 20px;
+                                           font-weight: 600;
+                                          "
+
+                                >주문정보 입력</h2>
+                                <table class="order_tb cf">
+                                    <colgroup>
+                                        <col style="width: 23.52%">
+                                        <col style="width: 76.48%">
+                                    </colgroup>
+                                    <tr>
+                                        <th>주문자</th>
+                                        <td>
+                                            <input readonly th:value="${carts[0].userName}" id="userName" type="text" class="uid" placeholder="홍길동">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>휴대폰</th>
+                                        <td>
+                                            <input readonly th:value="${carts[0].userHp}" id="userHp" type="text" class="hp" placeholder="010-1234-1001">
+                                        </td>
+                                    </tr>
+                                    <tr class="use cf">
+                                        <th>포인트사용</th>
+                                        <td class="use_point cf">
+                                            <input th:attr="max=${carts[0].userPoint}" id="usePoint" type="number" class="point" value="0">
+                                            <button onclick="useAllBtn()" class="point_btn">모두사용하기</button><br>
+                                            <div id="ownPoint" th:text="${carts[0].userPoint.intValue()}"></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>받는분</th>
+                                        <td><input id="recieverName" type="text" class="" placeholder=""></td>
+                                    </tr>
+                                    <tr>
+                                        <th>연락처</th>
+                                        <td><input id="recieverHp" type="text" class="" placeholder=""></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="delivery_addr">배송주소</th>
+                                        <td class="cf">
+                                            <input type="text" id="postcode" class="post_sch" placeholder="" title="우편번호 검색칸">
+                                            <a href="#"><img src="../images/btn_post_search.gif" onclick="execDaumPostcode(event)" alt="우편번호 검색" class="post_sch_btn"></a>
+                                            <input id="address" type="text" class="addr1" placeholder="기본주소 검색">
+                                            <input id="address-detail" type="text" class="addr2" placeholder="상세주소 입력">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>결제방법</th>
+                                        <td>
+                                            <input type="radio" checked name="buyingType" value="계좌이체">계좌이체
+                                            <input type="radio" name="buyingType" value="신용카드">신용카드
+                                            <input type="radio" name="buyingType" value="체크카드">체크카드
+                                            <input type="radio" name="buyingType" value="휴대폰">휴대폰
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="etc">기타</th>
+                                        <td><input type="textarea" id="orderEtc" ></td>
+                                    </tr>
+                                </table>
+                            </div> <!-- .order_info -->
+
+                            <div class="order_final cf">
+                                <table class="tb2">
+                                    <tr>
+                                        <th colspan="2">전체합계</th>
+                                    </tr>
+                                    <tr>
+                                        <td>상품수</td>
+                                        <td id="cartTotalCnt">1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>상품금액</td>
+                                        <td id="cartTotalPrice">27,000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>할인금액</td>
+                                        <td id="cartTotalDiscount">5,0000원</td>
+                                    </tr>
+                                    <tr>
+                                        <td>배송비</td>
+                                        <td id="cartTotalDelivery">5,0000원</td>
+                                    </tr>
+                                    <tr>
+                                        <td>포인트</td>
+                                        <td id="cartTotalSavePoint">4,000원</td>
+                                    </tr>
+                                    <tr>
+                                        <td>전체주문금액</td>
+                                        <td id="lastTotalPrice">22,000</td>
+                                    </tr>
+                                </table>
+                                <button class="btn_order" onclick="popUp()">주문하기</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </article>
+            </div>
+        </main>
+        <footer th:replace="layout/footer.html"></footer>
+    </div>
+    <script>
+        const deleteCartIdx = document.querySelectorAll('.selectedCheck');
+        const selectAllCheckbox = document.getElementById('allCheck');
+        const submitData = [];
+
+        // 개별 체크박스의 상태를 처리
+        deleteCartIdx.forEach((checkbox) => {
+            checkbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    submitData.push(e.target.value);
+                } else {
+                    const index = submitData.indexOf(e.target.value);
+                    if (index > -1) {
+                        submitData.splice(index, 1);
+                    }
+                }
+                // 전체 체크박스 상태를 업데이트
+                updateSelectAllCheckboxState();
+            });
+        });
+
+        // 전체 체크박스 버튼 상태를 처리
+        selectAllCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            deleteCartIdx.forEach((checkbox) => {
+                checkbox.checked = isChecked;
+                if (isChecked) {
+                    submitData.push(checkbox.value);
+                } else {
+                    const index = submitData.indexOf(e.target.value);
+                    if (index > -1) {
+                        submitData.splice(index, 1);
+                    }
+                }
+            });
+        });
+
+        // 전체 체크박스의 상태를 업데이트하는 함수
+        function updateSelectAllCheckboxState() {
+            const allChecked = Array.from(deleteCartIdx).every(checkbox => checkbox.checked);
+            const noneChecked = Array.from(deleteCartIdx).every(checkbox => !checkbox.checked);
+            selectAllCheckbox.checked = allChecked;
+            selectAllCheckbox.indeterminate = !allChecked && !noneChecked; // 일부만 선택된 상태를 나타내기 위한 설정
+        }
+
+
+        async function deleteCart(){
+            try {
+                const resp = await axios.delete('/api/client/cart',{
+                    data : {
+                        "cartItemIdx" : submitData
+                    },
+                    headers : {
+                        "Content-Type" : "application/json"
+                    }
+                })
+                console.log(resp.data)
+                if(resp.status===200){
+                    window.location.href = resp.data;
+                } else {
+                    alert('장바구니삭제 실패')
+                }
+
+            } catch (e) {
+
+            }
+        }
+
+    </script>
+    <script>
+        function popUp(){
+            const popup = document.querySelector('.popup')
+            if(popup.style.display==='block'){
+                postOrder();
+            }
+            popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+
+        }
+    </script>
+    <script>
+        let cartTotalPrice = 0;
+        let cartTotalDiscount = 0;
+        let cartDelieverFee = 0;
+        let cartTotalSavePoint = 0;
+
+        if (cartsData && Array.isArray(cartsData)) {
+            const cartDelivery = cartsData.map(cart => parseFloat(cart.prodDelivery));
+            const minProdPrice = cartDelivery.length > 0 ? Math.min(...cartDelivery) : 0;
+
+            for (let i = 0; i < cartsData.length; i++) {
+                cartTotalPrice += parseInt(cartsData[i].prodTotal) || 0;
+                cartTotalDiscount += parseInt(cartsData[i].prodTotal * cartsData[i].prodDiscount / 100) || 0;
+                console.log(cartsData[i].prodDiscount/100)
+                console.log(cartsData[i].prodTotal)
+                cartTotalSavePoint += parseInt(cartsData[i].prodPoint*cartsData[i].cartItemQuantity) || 0;
+            }
+
+            if (cartTotalPrice >= 30000) {
+                cartDelieverFee = 0;
+            } else {
+                cartDelieverFee = minProdPrice;
+            }
+
+
+            document.getElementById('cartTotalCnt').innerText = cartsData.length;
+            document.getElementById('cartTotalPrice').innerText = cartTotalPrice + '원';
+            document.getElementById('cartTotalDiscount').innerText = cartTotalDiscount + '원';
+            document.getElementById('cartTotalDelivery').innerText = cartDelieverFee + '원';
+            document.getElementById('cartTotalSavePoint').innerText = cartTotalSavePoint + 'p';
+            let usePoint = 0;
+            document.getElementById('usePoint').addEventListener('change',()=>{
+                usePoint = document.getElementById('usePoint').value
+                document.getElementById('lastTotalPrice').innerText = (cartTotalPrice + cartDelieverFee-cartTotalDiscount-usePoint) + '원';
+            })
+
+            document.getElementById('lastTotalPrice').innerText = (cartTotalPrice + cartDelieverFee-cartTotalDiscount-usePoint) + '원';
+
+
+            function useAllBtn(){
+                document.getElementById('usePoint').value = document.getElementById('ownPoint').innerText;
+                const max = parseFloat(this.max);
+                if (parseFloat(this.value) > max) {
+                    this.value = max;
+                }
+                document.getElementById('lastTotalPrice').innerText = (cartTotalPrice + cartDelieverFee-cartTotalDiscount-document.getElementById('usePoint').value) + '원';
+            }
+        } else {
+        //     Handle the case where cartsData is empty or null
+        }
+
+        async function postOrder() {
+            // Ensure there is a selected radio button
+            const selectedRadio = document.querySelector('input[name="buyingType"]:checked');
+            if (!selectedRadio) {
+                console.error('No buying type selected');
+                return;
+            }
+
+            const orderSubmitData = {
+                "orderQuantity": cartsData.length,
+                "orderTotalPrice": cartTotalPrice + cartDelieverFee,
+                "orderBuyingType": selectedRadio.value,
+                "usePoint": document.getElementById('usePoint').value,
+                "recieverName": document.getElementById('recieverName').value,
+                "recieverHp": document.getElementById('recieverHp').value,
+                "recieverAddr": document.getElementById('postcode').value + "/" + document.getElementById('address').value + "/" + document.getElementById('address-detail').value,
+                "orderSavePoint": cartTotalSavePoint,
+                "orderEtc": document.getElementById('orderEtc').value,
+                "cartIdx": cartsData.length > 0 ? cartsData[0].cartIdx : null
+            };
+
+            try {
+                const resp = await axios.post('/api/client/order', orderSubmitData, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                window.location.href = resp.data;
+            } catch (e) {
+                console.error('Order submission failed:', e);
+                // Optionally handle the error
+            }
+        }
+    </script>
+    <script>
+        const allCheck = document.getElementById('allCheck')
+        const selectedCheck = document.querySelectorAll('#selectedCheck')
+        let cnt = 0;
+        allCheck.addEventListener('change',(e)=>{
+            selectedCheck.forEach(v => {
+                v.checked = e.target.checked;
+                cnt = selectedCheck.length;
+                console.log(cnt)
+            })
+        })
+
+        selectedCheck.forEach(v=>{
+            v.addEventListener('change',(e)=>{
+                if(e.target.checked){
+                    cnt++;
+                    console.log(cnt)
+                } else {
+                    cnt--;
+                    console.log(cnt)
+                }
+                if(cnt===selectedCheck.length){
+                    allCheck.checked = true;
+                } else if(cnt<selectedCheck.length) {
+                    allCheck.checked = false;
+                }
+            })
+        })
+    </script>
+    <script>
+        function execDaumPostcode() {
+            event.preventDefault();
+            new daum.Postcode({
+                oncomplete: function(data) {
+                    // 우편번호와 주소 정보를 해당 입력 필드에 채워줍니다.
+                    document.getElementById('postcode').value = data.zonecode; // 우편번호
+                    document.getElementById('address').value = data.roadAddress; // 도로명 주소
+
+                    // 사용자가 선택한 주소에 추가 정보가 있다면 추가
+                    var extraAddr = '';
+                    if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                        extraAddr += data.bname;
+                    }
+                    if (data.buildingName !== '' && data.apartment === 'Y') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    if (extraAddr !== '') {
+                        document.getElementById('address').value += ' (' + extraAddr + ')';
+                    }
+
+                    // 우편번호 찾기 화면이 닫힙니다.
+                    document.getElementById('postcode').focus();
+                }
+            }).open();
+        }
+    </script>
+    <script>
+
+    </script>
+</body>
+</html>

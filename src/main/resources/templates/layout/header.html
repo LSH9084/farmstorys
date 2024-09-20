@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      th:fragment="HeaderFragment">
+<th:block th:fragment="script">
+    <script src="/js/axios.min.js"></script>
+</th:block>
+<head>
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <script th:inline="javascript">
+        var section = /*[[${section}]]*/ 'intro';
+    </script>
+</head>
+<body>
+<!--th:if="${role==null}"-->
+<header>
+    <a href="/"class="logo"><img th:src="@{/images/logo.png}" alt="로고"/></a>
+    <p>
+        <a href="/">HOME |&nbsp;</a>
+        <a href="/mypage/carts?section=mypage&type=cart" sec:authorize="isAuthenticated()">마이페이지 |&nbsp;</a>
+        <a href="/view/login" sec:authorize="!isAuthenticated()">로그인 |&nbsp;</a>
+        <a href="/auth/user/logout" sec:authorize="isAuthenticated()">로그아웃 |&nbsp;</a>
+        <a href="/view/signup" sec:authorize="!isAuthenticated()">회원가입 |&nbsp;</a>
+        <a href="/admin/users/products/orders" sec:authorize="hasRole('admin')">관리자 |&nbsp;</a>
+        <a href="/client/boards?section=community&type=qna">고객센터</a>
+    </p>
+    <img  th:src="@{/images/head_txt_img.png}" alt="3만원 이상 무료배송"/>
+
+    <ul class="gnb">
+        <li><a th:classappend="${section=='intro' ? 'active' : ''}" href="/sidebar?section=intro&type=greeting">팜스토리소개</a></li>
+        <li><a th:classappend="${section=='product' ? 'active' : ''}" href="/client/products?section=product&type=all"><img th:if="${dbToday=='true'}" th:src="@{/images/head_menu_badge.png}" alt="30%"/>장보기</a></li>
+        <li><a th:classappend="${section=='croptalk' ? 'active' : ''}" href="/client/boards?section=croptalk&type=story" class="croptalk">농작물이야기</a></li>
+        <li><a th:classappend="${section=='event' ? 'active' : ''}" href="/client/event?section=event&type=calendar" class="event">이벤트</a></li>
+        <li><a th:classappend="${section=='community' ? 'active' : ''}" href="/client/boards?section=community&type=notice" class="community">커뮤니티</a></li>
+    </ul>
+    <div id="header-img"></div>
+</header>
+<script>
+    function createHeaderImgs(section){
+        const h_img = document.getElementById('header-img');
+        h_img.classList.remove('bg-intro', 'bg-market', 'bg-croptalk', 'bg-community', 'bg-mypage');
+        if(section === 'intro'){
+            h_img.classList.add('bg-intro')
+        } else if(section === 'product'){
+            h_img.classList.add('bg-market')
+        } else if(section === 'croptalk'){
+            h_img.classList.add('bg-croptalk')
+        } else if(section === 'community'){
+            h_img.classList.add('bg-community')
+        } else if(section === 'mypage'){
+            h_img.classList.add('bg-mypage')
+        } else if(section === 'event'){
+            h_img.classList.add('bg-event')
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        createHeaderImgs(section);
+    });
+</script>
+
+</body>
+</html>

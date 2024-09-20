@@ -1,0 +1,249 @@
+.sidebar-box {
+    height: 650px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.sidebar-bg-box {
+    background-image: url('/images/sub_aside_bg_lnb.png');
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    width: 175px;
+    height: 233px;
+}
+
+.sidebar-bg-box-last{
+    background-image: url('/images/sub_aside_bg_lnb.png');
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    width: 175px;
+    height: 350px;
+}
+
+.sidebar-logo-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sidebar-logo-intro{
+    background-image: url(/images/sub_aside_cate1_tit.png);
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    width: 130px;
+    height: 45px;
+}
+
+.sidebar-logo-product{
+    background-image: url(/images/sub_aside_cate2_tit.png);
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    width: 130px;
+    height: 45px;
+}
+
+.sidebar-logo-croptalk{
+    background-image: url(/images/sub_aside_cate3_tit.png);
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    width: 130px;
+    height: 45px;
+}
+
+.sidebar-logo-event{
+    background-image: url(/images/sub_aside_cate4_tit.png);
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    width: 130px;
+    height: 45px;
+}
+
+.sidebar-logo-community{
+    background-image: url(/images/sub_aside_cate5_tit.png);
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    width: 130px;
+    height: 45px;
+}
+
+
+
+.sidebar-item {
+    width: 175px;
+    height: 29px;
+    margin-top: 6px;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    cursor: pointer;
+}
+
+.sidebar-item.greeting{
+    background-image: url(/images/sub_cate1_lnb1.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.greeting._ov{
+    background-image: url(/images/sub_cate1_lnb1_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.direction{
+    background-image: url(/images/sub_cate1_lnb2.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.direction._ov{
+    background-image: url(/images/sub_cate1_lnb2_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.product._ov{
+    background-image: url(/images/sub_cate2_lnb1_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.story{
+    background-image: url(/images/sub_cate3_lnb1.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.story._ov{
+    background-image: url(/images/sub_cate3_lnb1_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.grow{
+    background-image: url(/images/sub_cate3_lnb2.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.grow._ov{
+    background-image: url(/images/sub_cate3_lnb2_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.school{
+    background-image: url(/images/sub_cate3_lnb3.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.school._ov{
+    background-image: url(/images/sub_cate3_lnb3_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.event._ov{
+    background-image: url(/images/sub_cate4_lnb1_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.notice{
+    background-image: url(/images/sub_cate5_lnb1.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.notice._ov{
+    background-image: url(/images/sub_cate5_lnb1_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.menu{
+    background-image: url(/images/sub_cate5_lnb2.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.menu._ov{
+    background-image: url(/images/sub_cate5_lnb2_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.chef{
+    background-image: url(/images/sub_cate5_lnb3.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.chef._ov{
+    background-image: url(/images/sub_cate5_lnb3_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.qna{
+    background-image: url(/images/sub_cate5_lnb4.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.qna._ov{
+    background-image: url(/images/sub_cate5_lnb4_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.faq{
+    background-image: url(/images/sub_cate5_lnb5.png);
+    margin-top: 26px;
+}
+
+.sidebar-item.faq._ov{
+    background-image: url(/images/sub_cate5_lnb5_ov.png);
+    margin-top: 26px;
+}
+
+.mypage-cart {
+    background-image: url(/images/mypage_tit1.png);
+    margin-top: 26px;
+}
+
+.mypage-cart._ov {
+    background-image: url(/images/mypage_tit1_ov.png);
+    margin-top: 26px;
+}
+
+.mypage-order {
+    background-image: url(/images/mypage_tit2.png);
+    margin-top: 26px;
+}
+
+.mypage-order._ov {
+    background-image: url(/images/mypage_tit2_ov.png);
+    margin-top: 26px;
+}
+
+.mypage-point {
+    background-image: url(/images/mypage_tit4.png);
+    margin-top: 26px;
+}
+
+.mypage-point._ov {
+    background-image: url(/images/mypage_tit4_ov.png);
+    margin-top: 26px;
+}
+
+
+
+.mypage-user {
+    background-image: url(/images/mypage_tit3.png);
+    margin-top: 26px;
+}
+
+.mypage-user._ov {
+    background-image: url(/images/mypage_tit3_ov.png);
+    margin-top: 26px;
+}
+
+.sidebar-logo-mypage{
+    background-image: url(/images/mypage_menu_tit.png);
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    width: 130px;
+    height: 45px;
+}
+
+
+.sidebar-gubun-box{
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    width: 2px;
+    height: 650px;
+    background-image: url(/images/mypage_tit1_ov.png);
+}
