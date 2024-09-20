@@ -69,7 +69,7 @@ public class ProductController {
 
 
     @GetMapping("/product")
-    public ModelAndView getProduct(@RequestParam Long productIdx) {
+    public ModelAndView getProduct(@RequestParam int productIdx) {
         ModelAndView mav = new ModelAndView();
         mav.addObject("productIdx", productIdx);
         mav.addObject("section", "product");
