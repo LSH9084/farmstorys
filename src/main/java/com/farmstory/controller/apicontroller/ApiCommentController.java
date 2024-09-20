@@ -50,7 +50,7 @@ public class ApiCommentController {
         commentService.postComment(request);
 
 
-        String path = "api/client/comments?boardIdx="+request.getBoardIdx();
+        String path = "/api/client/comments?boardIdx="+request.getBoardIdx();
 
         return ResponseEntity.ok(path);
     }
@@ -61,7 +61,7 @@ public class ApiCommentController {
     ){
         commentService.updateComment(request);
 
-        String path = "api/client/comments?boardIdx=boardIdx";
+        String path = "/api/client/comments?boardIdx=boardIdx";
 
         return ResponseEntity.ok().body(path);
     }
@@ -72,7 +72,7 @@ public class ApiCommentController {
     ){
         commentService.deleteComment(commentIdx);
 
-        String path = "api/client/comments?boardIdx=";
+        String path = "/api/client/comments?boardIdx=";
 
         return ResponseEntity.ok().body(path);
     }

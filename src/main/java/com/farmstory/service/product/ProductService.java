@@ -181,7 +181,7 @@ public class ProductService {
         return "SU";
     }
 
-    public GetProductRespDto selectProduct(int productIdx) {
+    public GetProductRespDto selectProduct(Integer productIdx) {
         ProductEntity prod = productRepository.findById((long)productIdx).get();
         GetProductRespDto product = prod.getProductRespDto();
         return product;

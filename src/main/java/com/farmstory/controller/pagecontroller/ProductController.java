@@ -34,7 +34,6 @@ public class ProductController {
             long totalCntType2 = productService.countProductsByType("야채");
             long totalCntType3 = productService.countProductsByType("신선야채");
 
-            mav.addObject("products", products);
             mav.addObject("currentPage", page);
             mav.addObject("totalPage", Math.ceil((double)products.getTotalElements()/10));
             mav.addObject("totalCnt", products.getTotalElements());

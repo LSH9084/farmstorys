@@ -39,7 +39,7 @@
 <!--                    <img th:if="${dbToday=='true'}" th:src="@{/images/head_menu_badge.png}" alt="30%"/>-->
                     <tr class="tr-content" th:each="product : ${products}">
                         <td>
-                            <a th:href="@{client/product(productIdx=${product.prodIdx})}">
+                            <a th:href="@{/client/product(productIdx=${product.prodIdx})}">
                                 <img class="prod_img" th:src="@{${product.prodFilePath + product.prodFileName}}">
                                 <img th:if="${dbToday=='true'}" th:src="@{/images/head_menu_badge.png}" class="discount-img" alt="30%"/>
                             </a>

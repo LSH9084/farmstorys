@@ -87,7 +87,7 @@ public class ApiAdminController {
         }
 
         String result = productService.insertProduct(product,path1,path2,path3);
-        String path = "admin/products";
+        String path = "/admin/products";
 
         if("SU".equals(result)){
             return ResponseEntity.ok().body(path);
@@ -99,7 +99,7 @@ public class ApiAdminController {
     public ResponseEntity<String> deleteOrder(
             @RequestParam Long orderIdx
     ){
-        String path = "admin/orders";
+        String path = "/admin/orders";
 
         return ResponseEntity.ok().body(path);
     }
