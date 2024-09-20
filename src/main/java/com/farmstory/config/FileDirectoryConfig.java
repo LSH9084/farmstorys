@@ -13,6 +13,6 @@ public class FileDirectoryConfig implements WebMvcConfigurer {
     private String uploadDir;
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/file/**") .addResourceLocations("file:" + uploadDir + "/");
+        registry.addResourceHandler("/file/**").addResourceLocations("file:" + uploadDir + "/");
     }
 }

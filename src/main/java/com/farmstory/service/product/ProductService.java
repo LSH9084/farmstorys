@@ -48,7 +48,7 @@ public class ProductService {
             String correctedPath = path.replace("\\", "/");
             ProductFileEntity productFileEntity = ProductFileEntity.builder()
                     .prod(productEntity2)
-                    .prodFileName(list.substring(26))
+                    .prodFileName(list.substring(20))
                     .prodFilePath("/file/")
                     .prodFileType("list")
                     .build();
@@ -58,7 +58,7 @@ public class ProductService {
         if(basic!=null && !basic.isEmpty()) {
             ProductFileEntity productFileEntity = ProductFileEntity.builder()
                     .prod(productEntity2)
-                    .prodFileName(basic.substring(26))
+                    .prodFileName(basic.substring(20))
                     .prodFilePath("/file/")
                     .prodFileType("basic")
                     .build();
@@ -68,7 +68,7 @@ public class ProductService {
         if(description!=null && !description.isEmpty()) {
             ProductFileEntity productFileEntity = ProductFileEntity.builder()
                     .prod(productEntity2)
-                    .prodFileName(description.substring(26))
+                    .prodFileName(description.substring(20))
                     .prodFilePath("/file/")
                     .prodFileType("description")
                     .build();

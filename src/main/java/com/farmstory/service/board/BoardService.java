@@ -121,7 +121,7 @@ public class BoardService {
                     .board(boardEntity2)
                     .filepath("/file/")
                     .downloadCnt(0)
-                    .filename(path1.substring(26))
+                    .filename(path1.substring(20))
                     .build();
 
             boardFileRepository.save(boardFileEntity);
@@ -131,7 +131,7 @@ public class BoardService {
                     .board(boardEntity2)
                     .downloadCnt(0)
                     .filepath("/file/")
-                    .filename(path2.substring(26))
+                    .filename(path2.substring(20))
                     .build();
 
             boardFileRepository.save(boardFileEntity);
@@ -239,7 +239,7 @@ public class BoardService {
                         .board(boardEntity2)
                         .filepath("/file/")
                         .downloadCnt(0)
-                        .filename(path1.substring(26))
+                        .filename(path1.substring(20))
                         .build();
 
                 boardFileRepository.save(boardFileEntity);
@@ -249,7 +249,7 @@ public class BoardService {
                         .board(boardEntity2)
                         .filepath("/file/")
                         .downloadCnt(0)
-                        .filename(path2.substring(26))
+                        .filename(path2.substring(20))
                         .build();
                 boardFileRepository.save(boardFileEntity);
             }
@@ -261,7 +261,7 @@ public class BoardService {
                         .boardFileIdx(boardFileEntity.getBoardFileIdx())
                         .filepath("/file/")
                         .downloadCnt(0)
-                        .filename(path1.substring(26))
+                        .filename(path1.substring(20))
                         .board(boardEntity2)
                         .build();
 
@@ -274,7 +274,7 @@ public class BoardService {
                 BoardFileEntity uploadFile = BoardFileEntity.builder()
                         .filepath("/file/")
                         .downloadCnt(0)
-                        .filename(path2.substring(26))
+                        .filename(path2.substring(20))
                         .board(boardEntity2)
                         .build();
 
@@ -288,7 +288,7 @@ public class BoardService {
                         .boardFileIdx(boardFileEntity.getBoardFileIdx())
                         .filepath("/file/")
                         .downloadCnt(0)
-                        .filename(path1.substring(26))
+                        .filename(path1.substring(20))
                         .board(boardEntity2)
                         .build();
 
@@ -303,7 +303,7 @@ public class BoardService {
                         .boardFileIdx(boardFileEntity.getBoardFileIdx())
                         .filepath("/file/")
                         .downloadCnt(0)
-                        .filename(path1.substring(26))
+                        .filename(path1.substring(20))
                         .board(boardEntity2)
                         .build();
 
