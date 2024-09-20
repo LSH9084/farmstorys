@@ -23,9 +23,9 @@ public class ApiEventController {
         String result = userScheduleService.insertSchedule(dto);
 
         if("SU".equals(result)){
-            return ResponseEntity.ok().body("http://localhost:8080/client/event?section=event&&type=schedule");
+            return ResponseEntity.ok().body("client/event?section=event&&type=schedule");
         }
-        return ResponseEntity.ok().body("http://localhost:8080/view/login");
+        return ResponseEntity.ok().body("view/login");
     }  // 일정 추가하기
 
     @DeleteMapping("/schedule")

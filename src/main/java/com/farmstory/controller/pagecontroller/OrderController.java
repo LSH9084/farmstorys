@@ -25,7 +25,7 @@ public class OrderController {
 
         GetOrderDirectRespDto orderDirect = orderService.selectOrderDirect(prodIdx,quantity);
 
-        mav.setViewName("/pages/order/order_direct");
+        mav.setViewName("pages/order/order_direct");
         mav.addObject("orderDirect", orderDirect);
         mav.addObject("section","product");
 

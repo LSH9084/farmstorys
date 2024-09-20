@@ -22,7 +22,7 @@ public class ApiOrderController {
             @RequestBody PostOrderDirectReqDto request
     ){
         orderService.insertOrderDirect(request);
-        String path = "/mypage/orders?section=mypage&type=order";
+        String path = "mypage/orders?section=mypage&type=order";
         return ResponseEntity.ok().body(path);
     }
 
@@ -33,7 +33,7 @@ public class ApiOrderController {
         System.out.println(request);
         String result = orderService.insertOrder(request);
 
-        String path = "/mypage/orders?section=mypage&type=order";
+        String path = "mypage/orders?section=mypage&type=order";
 
         return ResponseEntity.ok().body(path);
     }

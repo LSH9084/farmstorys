@@ -75,7 +75,7 @@ public class ProductController {
         mav.addObject("section", "product");
         GetProductRespDto product = productService.selectProduct(productIdx);
 
-        mav.setViewName("/pages/product/product_view");
+        mav.setViewName("pages/product/product_view");
         mav.addObject("product",product);
         return mav;
     }

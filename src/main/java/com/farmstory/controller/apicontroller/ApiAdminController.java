@@ -33,7 +33,7 @@ public class ApiAdminController {
         String result = productService.deleteProduct(request);
         String path = null;
         if("SU".equals(result)){
-            path = "http://localhost:8080/admin/products";
+            path = "/admin/products";
         }
         return ResponseEntity.ok(path);
     }
@@ -46,7 +46,7 @@ public class ApiAdminController {
         String result = userService.deleteUser(request);
         String path = null;
         if("SU".equals(result)){
-            path = "http://localhost:8080/admin/users";
+            path = "/admin/users";
         }
         return ResponseEntity.ok(path);
     }
@@ -87,7 +87,7 @@ public class ApiAdminController {
         }
 
         String result = productService.insertProduct(product,path1,path2,path3);
-        String path = "http://localhost:8080/admin/products";
+        String path = "admin/products";
 
         if("SU".equals(result)){
             return ResponseEntity.ok().body(path);
@@ -99,7 +99,7 @@ public class ApiAdminController {
     public ResponseEntity<String> deleteOrder(
             @RequestParam Long orderIdx
     ){
-        String path = "http://localhost:8080/admin/orders";
+        String path = "admin/orders";
 
         return ResponseEntity.ok().body(path);
     }

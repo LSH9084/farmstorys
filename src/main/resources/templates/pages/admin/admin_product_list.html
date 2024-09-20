@@ -72,23 +72,7 @@
     <script src="/js/axios.min.js"></script>
 
     <script>
-        // const deleteProdIdx = document.querySelectorAll('#selectedCheck');
-        //
-        // const submitData = [];
-        //
-        // deleteProdIdx.forEach((v)=>{
-        //     v.addEventListener('change',(e)=>{
-        //         if(e.target.checked){
-        //             submitData.push(e.target.value);
-        //         } else {
-        //             // 체크 해제 시 배열에서 제거
-        //             const index = submitData.indexOf(e.target.value);
-        //             if (index > -1) {
-        //                 submitData.splice(index, 1);
-        //             }
-        //         }
-        //     })
-        // })
+
         const deleteCartIdx = document.querySelectorAll('.selectedCheck');
         const selectAllCheckbox = document.getElementById('allCheck');
         const submitData = [];
@@ -157,34 +141,6 @@
             }
         }
     </script>
-    <script>
-        // const allCheck = document.getElementById('allCheck')
-        // const selectedCheck = document.querySelectorAll('#selectedCheck')
-        // let cnt = 0;
-        // allCheck.addEventListener('change',(e)=>{
-        //     selectedCheck.forEach(v => {
-        //         v.checked = e.target.checked;
-        //         cnt = selectedCheck.length;
-        //         console.log(cnt)
-        //     })
-        // })
-        //
-        // selectedCheck.forEach(v=>{
-        //     v.addEventListener('change',(e)=>{
-        //         if(e.target.checked){
-        //             cnt++;
-        //             console.log(cnt)
-        //         } else {
-        //             cnt--;
-        //             console.log(cnt)
-        //         }
-        //         if(cnt===selectedCheck.length){
-        //             allCheck.checked = true;
-        //         } else if(cnt<selectedCheck.length) {
-        //             allCheck.checked = false;
-        //         }
-        //     })
-        // })
-    </script>
+
 </body>
 </html>

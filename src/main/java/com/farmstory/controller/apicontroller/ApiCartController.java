@@ -19,7 +19,7 @@ public class ApiCartController {
     ){
         String result = cartService.insertCart(request);
 
-        String path = "/client/products?section=product&type=all";
+        String path = "client/products?section=product&type=all";
 
 
         return ResponseEntity.ok().body(path);
@@ -33,7 +33,7 @@ public class ApiCartController {
         String path = null;
 
         if(result.equals("SU")){
-            path = "/mypage/carts?section=mypage&type=cart";
+            path = "mypage/carts?section=mypage&type=cart";
         }
 
         return ResponseEntity.ok(path);
