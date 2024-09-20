@@ -7,6 +7,7 @@ import com.farmstory.service.board.BoardService;
 import com.farmstory.service.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -142,13 +143,16 @@ public class ApiBoardController {
 
         return ResponseEntity.ok().body(map);
     }
+    @Value("${file.upload-dir}")
+    private String uploadDir;
 
     @GetMapping("/board/download")
     public ResponseEntity<Resource> downloadBoard(
             @RequestParam long boardFileIdx
     ) throws IOException {
-        System.out.println(boardFileIdx);
-        String fileDirectory = "C:/path/to/upload/directory/";
+
+
+        String fileDirectory = uploadDir;
 
         String fileName = boardService.downloadBoard(boardFileIdx);
 
