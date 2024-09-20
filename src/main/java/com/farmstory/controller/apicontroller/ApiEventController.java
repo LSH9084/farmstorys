@@ -23,7 +23,7 @@ public class ApiEventController {
         String result = userScheduleService.insertSchedule(dto);
 
         if("SU".equals(result)){
-            return ResponseEntity.ok().body("client/event?section=event&&type=schedule");
+            return ResponseEntity.ok().body("/client/event?section=event&&type=schedule");
         }
         return ResponseEntity.ok().body("view/login");
     }  // 일정 추가하기
