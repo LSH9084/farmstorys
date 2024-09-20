@@ -28,7 +28,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(AbstractHttpConfigurer::disable)
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("admin") // 관리자만 접근 가능
                         .requestMatchers("/client/**").hasAnyRole("user","admin") // 일반 사용자만 접근 가능
@@ -50,8 +50,8 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .logoutRequestMatcher(new AntPathRequestMatcher("/auth/user/logout","GET"))  // 절대 경로로 설정
                         .logoutSuccessUrl("/"))
-                .httpBasic(Customizer.withDefaults());
-
+                .httpBasic(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
 
