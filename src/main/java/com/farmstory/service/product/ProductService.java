@@ -42,7 +42,7 @@ public class ProductService {
 
         ProductEntity productEntity = product.toEntity();
         ProductEntity productEntity2 = productRepository.save(productEntity);
-
+ 
         if(list!=null && !list.isEmpty()) {
             String path = list.substring(0,26);
             String correctedPath = path.replace("\\", "/");
