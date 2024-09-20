@@ -12,7 +12,7 @@ public class IntroController {
     public ModelAndView introGreeting(@RequestParam String section, String type) {
         if(section.equals("intro")){
             ModelAndView mav = new ModelAndView();
-            mav.setViewName("/pages/intro");
+            mav.setViewName("pages/intro");
             mav.addObject("section", section);
             mav.addObject("type", type);
             return mav;
