@@ -26,7 +26,7 @@ public class MyUserDetails implements UserDetails {
         authorities.add(new SimpleGrantedAuthority("ROLE_"+user.getUserRole())); // 계정 권한 앞에 접두어 ROLE_ 붙여야 됨
         return authorities;
     }
-
+  
     @Override
     public String getPassword() {
         return user.getUserPwd();
