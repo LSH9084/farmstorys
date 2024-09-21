@@ -78,8 +78,8 @@ public class ProductController {
 
         mav.setViewName("pages/product/product_view");
         mav.addObject("product",product);
-//        return mav;
-        return null;
+        return mav;
+//        return null;
     }
 
 
