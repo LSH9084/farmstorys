@@ -55,7 +55,7 @@ public class ProductEntity {
     @Column(name = "prod_etc", nullable = false)
     private String prodEtc;
 
-    @OneToMany(mappedBy = "prod", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "prod", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<ProductFileEntity> productFiles;
 
